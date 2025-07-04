@@ -44,10 +44,7 @@ function EditPatientPage({ resetForm, item, file, setFile }) {
       //   console.log(pair[0], pair[1]);
       // }
       const res = await updatePatient(item.id, formData);
-<<<<<<< HEAD
-=======
       await new Promise((rs) => setTimeout(rs, 1000));
->>>>>>> c55d519 (second commit)
       setFile("");
       document.getElementById(`updatePatient-form${item.id}`).close();
       toast.success(res.data.message);

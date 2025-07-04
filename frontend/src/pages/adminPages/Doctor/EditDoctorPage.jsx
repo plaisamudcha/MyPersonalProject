@@ -65,10 +65,7 @@ function EditDoctorPage({ resetForm, item, file, setFile }) {
       // }
       const res = await updateDoctor(item.id, formData);
       setFile("");
-<<<<<<< HEAD
-=======
       await new Promise((rs) => setTimeout(rs, 1000));
->>>>>>> c55d519 (second commit)
       document.getElementById(`updateDoctor-form${item.id}`).close();
       toast.success(res.data.message);
     } catch (error) {

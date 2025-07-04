@@ -3,8 +3,6 @@ import useMedicineStore from "../../../stores/useMedicineStore";
 import MedicinesForm from "../../../components/MedicinesForm";
 import EditMedicinePage from "./EditMedicinePage";
 import CreateMedicinePage from "./CreateMedicinePage";
-<<<<<<< HEAD
-=======
 import CreateButton from "../../../components/CreateButton";
 import SearchTextForm from "../../../components/SearchForm";
 import SearchSelectForm from "../../../components/SearchSelectForm";
@@ -17,7 +15,6 @@ const form = [
   { id: 4, value: "INJECTION", name: "Injection" },
   { id: 5, value: "CREAM", name: "Cream" },
 ];
->>>>>>> c55d519 (second commit)
 
 function MedicinesListPage() {
   const [resetForm, setResetForm] = useState(false);
@@ -46,46 +43,6 @@ function MedicinesListPage() {
       <h1 className="text-3xl font-bold text-center">
         List of all medicines : {filteredMedicines.length}
       </h1>
-<<<<<<< HEAD
-      <button
-        className="absolute right-0 btn btn-active btn-lg"
-        onClick={() => {
-          document.getElementById("createMedicine-form").showModal();
-        }}
-      >
-        Create new medicine
-      </button>
-      <div className="flex border p-2 rounded-xl shadow-md justify-around">
-        <label className="font-bold">
-          {" "}
-          Search by name:
-          <input
-            value={searchName}
-            onChange={(e) => setSearchName(e.target.value)}
-            className="input input-accent mt-2"
-            type="text"
-            placeholder="Search"
-          />
-        </label>
-        <label className="font-bold">
-          {" "}
-          Search by Form:
-          <select
-            className="select select-accent mt-2"
-            value={searchForm}
-            onChange={async (e) => {
-              setSearchForm(e.target.value);
-            }}
-          >
-            <option value="">All</option>
-            <option value="TABLET">Tablet</option>
-            <option value="SYRUP">Syrup</option>
-            <option value="CAPSULE">Capsule</option>
-            <option value="INJECTION">Injection</option>
-            <option value="CREAM">Cream</option>
-          </select>
-        </label>
-=======
       <CreateButton head="Create new medicine" modalID="createMedicine-form" />
       <div className="flex border p-2 rounded-xl shadow-md justify-around">
         <SearchTextForm
@@ -99,7 +56,6 @@ function MedicinesListPage() {
           setStatusFilter={setSearchForm}
           array={form}
         />
->>>>>>> c55d519 (second commit)
       </div>
       <div className="w-full ">
         <table className="table table-auto w-full">
@@ -147,11 +103,7 @@ function MedicinesListPage() {
             </button>
           </form>
         </div>
-<<<<<<< HEAD
-      </dialog>{" "}
-=======
       </dialog>
->>>>>>> c55d519 (second commit)
     </div>
   );
 }

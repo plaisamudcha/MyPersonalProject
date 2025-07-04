@@ -4,10 +4,7 @@ const appointmentsService = {
   getAllAppointments: async () => {
     const result = await prisma.appointment.findMany({
       omit: { doctorId: true, patientId: true, updatedAt: true },
-<<<<<<< HEAD
-=======
       orderBy: { date: "desc" },
->>>>>>> c55d519 (second commit)
       include: {
         doctor: {
           omit: { userId: true, profileImage: true, deletedAt: true },
@@ -78,9 +75,6 @@ const appointmentsService = {
       where: { id: Number(id) },
       omit: { password: true, createdAt: true },
       include: {
-<<<<<<< HEAD
-        doctor: { include: { appointments: true }, omit: { userId: true } },
-=======
         doctor: {
           include: {
             appointments: {
@@ -99,7 +93,6 @@ const appointmentsService = {
           },
           omit: { userId: true },
         },
->>>>>>> c55d519 (second commit)
       },
     });
     return result.doctor.appointments;

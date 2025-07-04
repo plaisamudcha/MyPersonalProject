@@ -15,10 +15,6 @@ function DoctorLayout() {
   const currentNav = nav.find((el) => el.path === location.pathname);
   const logout = useUserStore((state) => state.logout);
   const user = useUserStore((state) => state.user);
-<<<<<<< HEAD
-  console.log("user", user);
-=======
->>>>>>> c55d519 (second commit)
   return (
     <div className="h-screen flex flex-col overflow-auto">
       <div className="flex flex-1 overflow-auto bg-gray-100 p-5 pb-0">

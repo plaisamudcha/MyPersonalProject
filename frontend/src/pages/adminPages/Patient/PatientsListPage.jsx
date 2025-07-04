@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react";
 import EditPatientPage from "./EditPatientPage";
 import usePatientStore from "../../../stores/usePatientStore";
 import PatientCard from "../../../components/PatientCard";
-<<<<<<< HEAD
-=======
 import SearchTextForm from "../../../components/SearchForm";
->>>>>>> c55d519 (second commit)
 
 function DoctorsListPage() {
   const [file, setFile] = useState("");
@@ -38,30 +35,6 @@ function DoctorsListPage() {
         List of all patients : {filteredPatients.length}
       </h1>
       <div className="flex border p-2 rounded-xl shadow-md justify-around">
-<<<<<<< HEAD
-        <label className="font-bold">
-          {" "}
-          Search by name:
-          <input
-            value={searchName}
-            onChange={(e) => setSearchName(e.target.value)}
-            className="input input-accent mt-2"
-            type="text"
-            placeholder="Search"
-          />
-        </label>
-        <label className="font-bold">
-          {" "}
-          Search by Patient ID:
-          <input
-            value={searchId}
-            onChange={(e) => setSearchId(e.target.value)}
-            className="input input-accent mt-2"
-            type="text"
-            placeholder="Search"
-          />
-        </label>
-=======
         <SearchTextForm
           head="Search by name"
           search={searchName}
@@ -73,7 +46,6 @@ function DoctorsListPage() {
           setSearch={setSearchId}
           type="number"
         />
->>>>>>> c55d519 (second commit)
       </div>
 
       <div className="flex flex-wrap gap-10 justify-around">

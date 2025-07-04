@@ -2,11 +2,8 @@ import { useEffect, useState } from "react";
 import useStockLogStore from "../../../stores/useStockLogStore";
 import StockLogsForm from "../../../components/StockLogsForm";
 import CreateStockLogPage from "./CreateStockLogPage";
-<<<<<<< HEAD
-=======
 import CreateButton from "../../../components/CreateButton";
 import SearchTextForm from "../../../components/SearchForm";
->>>>>>> c55d519 (second commit)
 
 function StockLogsListPage() {
   const [resetForm, setResetForm] = useState(false);
@@ -28,43 +25,11 @@ function StockLogsListPage() {
   const hdlClose = () => {
     setResetForm((prv) => !prv);
   };
-<<<<<<< HEAD
-  const onSearch = async (e) => {
-    e.preventDefault();
-    await getAllStockLogs(search);
-    setSearch("");
-  };
-=======
->>>>>>> c55d519 (second commit)
   return (
     <div className="relative flex flex-col gap-7 overflow-auto">
       <h1 className="text-3xl font-bold text-center">
         List of all stocklogs : {filteredStockLogs.length}
       </h1>
-<<<<<<< HEAD
-      <button
-        className="absolute right-0 btn btn-active btn-lg"
-        onClick={() => {
-          document.getElementById("createStockLog-form").showModal();
-        }}
-      >
-        Create new stocklog
-      </button>
-      <div className="flex border p-2 rounded-xl shadow-md justify-around">
-        <form onSubmit={onSearch}>
-          <label className="font-bold">
-            {" "}
-            Search by name:
-            <input
-              value={searchName}
-              onChange={(e) => setSearchName(e.target.value)}
-              className="input input-accent mt-2"
-              type="text"
-              placeholder="Search"
-            />
-          </label>
-        </form>
-=======
       <CreateButton head="Create new stock-log" modalID="createStockLog-form" />
       <div className="flex border p-2 rounded-xl shadow-md justify-around">
         <SearchTextForm
@@ -72,7 +37,6 @@ function StockLogsListPage() {
           search={searchName}
           setSearch={setSearchName}
         />
->>>>>>> c55d519 (second commit)
       </div>
       <div className="w-full ">
         <table className="table table-auto w-full">

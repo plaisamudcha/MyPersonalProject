@@ -6,11 +6,8 @@ function PatientCard({ item }) {
   const deletePatient = usePatientStore((state) => state.deletePatient);
   const onDelete = async () => {
     try {
-<<<<<<< HEAD
-=======
       const email = prompt("Put email to delete");
       if (email !== item.user.email) return toast.info("Invalid email");
->>>>>>> c55d519 (second commit)
       const res = await deletePatient(item.id);
       toast.success(res.data.message);
     } catch (error) {

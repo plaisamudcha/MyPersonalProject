@@ -27,10 +27,7 @@ function CreateMedicinePage({ resetForm }) {
   } = useForm({
     resolver: yupResolver(adminSchema.createMedicine),
     shouldFocusError: true,
-<<<<<<< HEAD
-=======
     defaultValues: { form: "" },
->>>>>>> c55d519 (second commit)
   });
   const onUpdate = async (data) => {
     try {

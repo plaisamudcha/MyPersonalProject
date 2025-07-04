@@ -3,8 +3,6 @@ import useAppointmentStore from "../../../stores/useAppointmentStore";
 import AppointmentsForm from "../../../components/AppointmentsForm";
 import EditAppointmentPage from "./EditAppointmentPage";
 import CreateAppointmentPage from "./CreateAppointmentPage";
-<<<<<<< HEAD
-=======
 import SearchTextForm from "../../../components/SearchForm";
 import SearchSelectForm from "../../../components/SearchSelectForm";
 import CreateButton from "../../../components/CreateButton";
@@ -14,7 +12,6 @@ const status = [
   { id: 1, value: "SCHEDULED", name: "Schedule" },
   { id: 2, value: "COMPLETED", name: "Complete" },
 ];
->>>>>>> c55d519 (second commit)
 
 function AppointmentsListPage() {
   const [resetForm, setResetForm] = useState(false);
@@ -50,52 +47,6 @@ function AppointmentsListPage() {
       <h1 className="text-3xl font-bold text-center">
         List of all appointments : {filteredAppointments.length}
       </h1>
-<<<<<<< HEAD
-      <button
-        className="absolute right-0 btn btn-active btn-lg"
-        onClick={() => {
-          document.getElementById("createAppointment-form").showModal();
-        }}
-      >
-        Create new appointment
-      </button>
-      <div className="flex border p-2 rounded-xl shadow-md justify-around">
-        <label className="font-bold">
-          {" "}
-          Search by doctor:
-          <input
-            value={doctorSearch}
-            onChange={(e) => setDoctorSearch(e.target.value)}
-            className="input input-accent mt-2"
-            type="text"
-            placeholder="Search"
-          />
-        </label>
-        <label className="font-bold">
-          {" "}
-          Search by patient:
-          <input
-            value={patientSearch}
-            onChange={(e) => setPatientSearch(e.target.value)}
-            className="input input-accent mt-2"
-            type="text"
-            placeholder="Search"
-          />
-        </label>
-        <label className="font-bold">
-          {" "}
-          Search by Status:
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="select select-accent mt-2"
-          >
-            <option value="">All</option>
-            <option value="SCHEDULED">Scheduled</option>
-            <option value="COMPLETED">Completed</option>
-          </select>
-        </label>
-=======
       <CreateButton
         head={"Create new appointment"}
         modalID={"createAppointment-form"}
@@ -117,7 +68,6 @@ function AppointmentsListPage() {
           setStatusFilter={setStatusFilter}
           array={status}
         />
->>>>>>> c55d519 (second commit)
       </div>
       <div className="w-full ">
         <table className="table table-auto w-full">

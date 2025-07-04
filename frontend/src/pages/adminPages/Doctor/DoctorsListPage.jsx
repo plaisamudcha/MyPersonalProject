@@ -3,10 +3,7 @@ import { Link } from "react-router";
 import useDoctorStore from "../../../stores/useDoctorStore";
 import DoctorCard from "../../../components/DoctorCard";
 import EditDoctorPage from "./EditDoctorPage";
-<<<<<<< HEAD
-=======
 import SearchTextForm from "../../../components/SearchForm";
->>>>>>> c55d519 (second commit)
 
 function DoctorsListPage() {
   const [file, setFile] = useState("");
@@ -37,34 +34,6 @@ function DoctorsListPage() {
   };
   return (
     <div className="flex flex-col gap-7 ">
-<<<<<<< HEAD
-      <h1 className="text-3xl font-bold text-center">
-        List of all doctors : {filteredDoctors.length}
-      </h1>
-      <div className="flex border p-2 rounded-xl shadow-md justify-around">
-        <label className="font-bold">
-          {" "}
-          Search by name:
-          <input
-            value={searchName}
-            onChange={(e) => setSearchName(e.target.value)}
-            className="input input-accent mt-2"
-            type="text"
-            placeholder="Search"
-          />
-        </label>
-        <label className="font-bold">
-          {" "}
-          Search by Patient ID:
-          <input
-            value={searchId}
-            onChange={(e) => setSearchId(e.target.value)}
-            className="input input-accent mt-2"
-            type="text"
-            placeholder="Search"
-          />
-        </label>
-=======
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-center">
           List of all doctors : {filteredDoctors.length}
@@ -88,7 +57,6 @@ function DoctorsListPage() {
           setSearch={setSearchId}
           type="number"
         />
->>>>>>> c55d519 (second commit)
       </div>
 
       <div className="flex flex-wrap gap-10 justify-around overflow-auto">
@@ -117,15 +85,6 @@ function DoctorsListPage() {
           </div>
         ))}
       </div>
-<<<<<<< HEAD
-      <Link
-        to="/admin/register/doctor"
-        className="btn btn-info btn-lg w-50 rounded-lg"
-      >
-        Create new Doctor
-      </Link>
-=======
->>>>>>> c55d519 (second commit)
     </div>
   );
 }

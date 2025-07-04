@@ -1,10 +1,7 @@
 import { create } from "zustand";
 import adminToBackend from "../api/adminApi";
 import useUserStore from "./useUserStore";
-<<<<<<< HEAD
-=======
 import doctorToBackend from "../api/doctorApi";
->>>>>>> c55d519 (second commit)
 
 const useAppointmentStore = create((set, get) => ({
   appointments: [],
@@ -37,15 +34,12 @@ const useAppointmentStore = create((set, get) => ({
     get().getAllAppointments();
     return res;
   },
-<<<<<<< HEAD
-=======
   getAllAppointmentsByDoctor: async () => {
     const token = useUserStore.getState().accessToken;
     const res = await doctorToBackend.getAllAppointments(token);
     set({ appointments: res.data.appointments });
     return res;
   },
->>>>>>> c55d519 (second commit)
 }));
 
 export default useAppointmentStore;
