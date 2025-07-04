@@ -1,0 +1,33 @@
+###
+GET http://localhost:3026/api/medicines/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMjA1MjY2LCJleHAiOjE3NTEyOTE2NjZ9.OQe6nejuTlx-7izwjvv5VvxQavUPDSlFP2So03yeTzU
+
+###
+POST http://localhost:3026/api/medicines/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMjA1MjY2LCJleHAiOjE3NTEyOTE2NjZ9.OQe6nejuTlx-7izwjvv5VvxQavUPDSlFP2So03yeTzU
+Content-Type: application/json
+
+{
+  "name": "Paracetamol",
+  "description": "ยาแก้ปวดลดไข้",
+  "stock": 200,
+  "pricePerUnit": 5.5,
+  "form": "TABLET"
+}
+
+###
+PUT http://localhost:3026/api/medicines/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMjA1MjY2LCJleHAiOjE3NTEyOTE2NjZ9.OQe6nejuTlx-7izwjvv5VvxQavUPDSlFP2So03yeTzU
+Content-Type: application/json
+
+{
+  "name": "Paracetamol",
+  "description": "ยาแก้ปวดลดไข้",
+  "stock": 200,
+  "pricePerUnit": 5.5,
+  "form": "TABLET"
+}
+
+###
+GET http://localhost:3026/api/medicines/30
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMjA1MjY2LCJleHAiOjE3NTEyOTE2NjZ9.OQe6nejuTlx-7izwjvv5VvxQavUPDSlFP2So03yeTzU

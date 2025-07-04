@@ -1,0 +1,19 @@
+###
+GET http://localhost:3026/api/appointments/?status="COMPLETED"
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxNDYzNjU5LCJleHAiOjE3NTE1NTAwNTl9.rfGzsZi4yeUJStr-NK6mXPQMBjQzVOzO0xprkEMt9zQ
+
+###
+GET http://localhost:3026/api/appointments/5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMTI4MDA3LCJleHAiOjE3NTEyMTQ0MDd9.wq-dKdGLZ5-C3HAUPSgsLFIzhQDoH3EBuoUN_sEI_y0
+
+###
+GET http://localhost:3026/api/appointments/doctors
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjQsInJvbGUiOiJET0NUT1IiLCJpYXQiOjE3NTEyMDE3NDAsImV4cCI6MTc1MTI4ODE0MH0.RncJ2d1qudAI4IU562ftY0XPydOcbnCreifqr6Myu7s
+
+###
+GET http://localhost:3026/api/appointments/patients
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsInJvbGUiOiJQQVRJRU5UIiwiaWF0IjoxNzUxMjAzMDIyLCJleHAiOjE3NTEyODk0MjJ9.Sl-O7qUITasffuOJRk5--6cv7kFgE4sGrPsHPodQpFE
+
+###
+DELETE http://localhost:3026/api/appointments/30
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMTI4MDA3LCJleHAiOjE3NTEyMTQ0MDd9.wq-dKdGLZ5-C3HAUPSgsLFIzhQDoH3EBuoUN_sEI_y0

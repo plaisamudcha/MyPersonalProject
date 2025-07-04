@@ -1,0 +1,22 @@
+GET http://localhost:3026/api/doctors HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxNDYzNjU5LCJleHAiOjE3NTE1NTAwNTl9.rfGzsZi4yeUJStr-NK6mXPQMBjQzVOzO0xprkEMt9zQ
+
+###
+GET http://localhost:3026/api/doctors/2 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMTI4MDA3LCJleHAiOjE3NTEyMTQ0MDd9.wq-dKdGLZ5-C3HAUPSgsLFIzhQDoH3EBuoUN_sEI_y0
+
+###
+PUT http://localhost:3026/api/doctors/4 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUwOTQ4MTc3LCJleHAiOjE3NTEwMzQ1Nzd9.1gQP3MscYNOIglxPrhIvvEIDlqMRumDW5G7ioy4cZSo
+
+{
+    "firstName": "Captain",
+    "lastName": "Hook",
+    "email": "captain@gmail.com",
+    "specialization": "UROLOGY"
+}
+
+###
+PATCH http://localhost:3026/api/doctors/4 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUwOTQ4MTc3LCJleHAiOjE3NTEwMzQ1Nzd9.1gQP3MscYNOIglxPrhIvvEIDlqMRumDW5G7ioy4cZSo

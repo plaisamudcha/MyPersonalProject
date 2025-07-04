@@ -1,0 +1,14 @@
+###
+GET http://localhost:3026/api/stock-logs/?name=para
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxNTI3MzM2LCJleHAiOjE3NTE2MTM3MzZ9.n4ejz75-tg2GdQYcbeSrC6am9zuoOZ4FwfzfDQnGFqI
+
+###
+POST http://localhost:3026/api/stock-logs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxNTI3MzM2LCJleHAiOjE3NTE2MTM3MzZ9.n4ejz75-tg2GdQYcbeSrC6am9zuoOZ4FwfzfDQnGFqI
+Content-Type: application/json
+
+{
+  "medicineId": 3,
+  "change": -10,
+  "reason": "in"
+}

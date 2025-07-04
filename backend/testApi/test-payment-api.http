@@ -1,0 +1,32 @@
+###
+GET http://localhost:3026/api/payments
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMjA1MjY2LCJleHAiOjE3NTEyOTE2NjZ9.OQe6nejuTlx-7izwjvv5VvxQavUPDSlFP2So03yeTzU
+
+###
+GET http://localhost:3026/api/payments/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMjA1MjY2LCJleHAiOjE3NTEyOTE2NjZ9.OQe6nejuTlx-7izwjvv5VvxQavUPDSlFP2So03yeTzU
+
+###
+GET http://localhost:3026/api/payments/patients
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsInJvbGUiOiJQQVRJRU5UIiwiaWF0IjoxNzUxMjE4Mzk1LCJleHAiOjE3NTEzMDQ3OTV9.RK6UO5D-W8G_MT5SgO8AkuEsXM3T5CQ8Tc8O0dpgBJc
+
+###
+POST http://localhost:3026/api/payments
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMjA1MjY2LCJleHAiOjE3NTEyOTE2NjZ9.OQe6nejuTlx-7izwjvv5VvxQavUPDSlFP2So03yeTzU
+Content-Type: application/json
+
+{
+  "appointmentId": 7,
+  "patientId": 16,
+  "amount": 950.50,
+  "paymentMethod": "credit"
+}
+
+###
+PATCH  http://localhost:3026/api/payments/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMjA1MjY2LCJleHAiOjE3NTEyOTE2NjZ9.OQe6nejuTlx-7izwjvv5VvxQavUPDSlFP2So03yeTzU
+Content-Type: application/json
+
+{
+  "status": "PAID"
+}

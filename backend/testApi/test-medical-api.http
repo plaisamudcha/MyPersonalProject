@@ -1,0 +1,26 @@
+###
+GET http://localhost:3026/api/medical-records/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMjA1MjY2LCJleHAiOjE3NTEyOTE2NjZ9.OQe6nejuTlx-7izwjvv5VvxQavUPDSlFP2So03yeTzU
+
+###
+GET http://localhost:3026/api/medical-records/29
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMjA1MjY2LCJleHAiOjE3NTEyOTE2NjZ9.OQe6nejuTlx-7izwjvv5VvxQavUPDSlFP2So03yeTzU
+
+###
+POST http://localhost:3026/api/medical-records
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjQsInJvbGUiOiJET0NUT1IiLCJpYXQiOjE3NTEyMDYyNjQsImV4cCI6MTc1MTI5MjY2NH0.bHrznTl2ygMoWxAuH5T5ON06KYrKWxc2DYsqhh7RtwI
+Content-Type: application/json
+
+{
+    "diagnosis": "test diagnosis",
+    "notes": "test notes",
+    "appointmentId": 30
+}
+
+###
+GET http://localhost:3026/api/medical-records/doctors
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjQsInJvbGUiOiJET0NUT1IiLCJpYXQiOjE3NTEyMDYyNjQsImV4cCI6MTc1MTI5MjY2NH0.bHrznTl2ygMoWxAuH5T5ON06KYrKWxc2DYsqhh7RtwI
+
+###
+GET http://localhost:3026/api/medical-records/patients
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTMsInJvbGUiOiJQQVRJRU5UIiwiaWF0IjoxNzUxMjA4MTI1LCJleHAiOjE3NTEyOTQ1MjV9.8PWIXLnEAf0GkqXHqAP3UEr9gzEI9_fyyjis6FucPlI

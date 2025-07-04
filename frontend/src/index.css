@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@plugin 'daisyui' {
+  themes: corporate --default;
+}
+
+.active {
+  background-color: rgb(173, 196, 230);
+  transform: scale(1.1);
+  box-shadow: 4px 4px 8px gray;
+}

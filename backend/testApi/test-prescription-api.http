@@ -1,0 +1,27 @@
+###
+GET http://localhost:3026/api/prescriptions/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMjA1MjY2LCJleHAiOjE3NTEyOTE2NjZ9.OQe6nejuTlx-7izwjvv5VvxQavUPDSlFP2So03yeTzU
+
+###
+GET http://localhost:3026/api/prescriptions/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUxMjA1MjY2LCJleHAiOjE3NTEyOTE2NjZ9.OQe6nejuTlx-7izwjvv5VvxQavUPDSlFP2So03yeTzU
+
+###
+POST http://localhost:3026/api/prescriptions/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjQsInJvbGUiOiJET0NUT1IiLCJpYXQiOjE3NTEyMTIxNjMsImV4cCI6MTc1MTI5ODU2M30.b2CzTQIYmCw0pWZunnx_aBN-hYyUpFaRO0JWNkxmjmc
+Content-Type: application/json
+
+{
+    "dosage": "7 times",
+    "duration": "7 days",
+    "medicalRecordId": 28,
+    "medicineId": 30
+}
+
+###
+GET http://localhost:3026/api/prescriptions/doctors
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjQsInJvbGUiOiJET0NUT1IiLCJpYXQiOjE3NTEyMTIxNjMsImV4cCI6MTc1MTI5ODU2M30.b2CzTQIYmCw0pWZunnx_aBN-hYyUpFaRO0JWNkxmjmc
+
+###
+DELETE http://localhost:3026/api/prescriptions/31
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjQsInJvbGUiOiJET0NUT1IiLCJpYXQiOjE3NTEyMTIxNjMsImV4cCI6MTc1MTI5ODU2M30.b2CzTQIYmCw0pWZunnx_aBN-hYyUpFaRO0JWNkxmjmc
