@@ -42,8 +42,7 @@ function RegisterDoctorPage() {
   });
   const onRegister = async (data) => {
     try {
-      await new Promise((rs) => setTimeout(rs, 2000));
-      console.log("data", data);
+      // await new Promise((rs) => setTimeout(rs, 2000));
       const res = await authToBackend.registerDoctor(data, token);
       reset();
       navi("/");

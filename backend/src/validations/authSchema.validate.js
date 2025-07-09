@@ -91,7 +91,7 @@ const authSchema = {
       .required("lastname is required"),
     email: string().email("Email is incorrect").required("Email is required"),
     phone: string()
-      .matches(/^0\d{8,9}$/, "Invalid phone number (0{8,9}xxxxxxxx)")
+      .matches(/^0[89]\d{8}$/, "Invalid phone number (0{8,9}xxxxxxxx)")
       .required("Phone number is required"),
   }).noUnknown(),
   createAppointment: object({

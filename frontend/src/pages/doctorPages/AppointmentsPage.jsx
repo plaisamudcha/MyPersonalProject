@@ -13,7 +13,9 @@ const status = [
 function AppointmentsPage() {
   const [patientSearch, setPatientSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const appointments = useAppointmentStore((state) => state.appointments);
+  const appointmentsByDoctorId = useAppointmentStore(
+    (state) => state.appointmentsByDoctorId
+  );
   const getAllAppointmentsByDoctor = useAppointmentStore(
     (state) => state.getAllAppointmentsByDoctor
   );
@@ -22,7 +24,7 @@ function AppointmentsPage() {
     getAllAppointmentsByDoctor();
   }, []);
   useEffect(() => {
-    const result = appointments.filter((el) => {
+    const result = appointmentsByDoctorId.filter((el) => {
       const patientName =
         `${el.patient?.user?.firstName} ${el.patient?.user?.lastName}`.toLowerCase();
       const matchPatient = patientName.includes(patientSearch.toLowerCase());
@@ -30,7 +32,7 @@ function AppointmentsPage() {
       return matchPatient && matchStatus;
     });
     setFilteredAppointments(result);
-  }, [patientSearch, statusFilter, appointments]);
+  }, [patientSearch, statusFilter, appointmentsByDoctorId]);
   return (
     <>
       <div className="relative flex flex-col gap-7 overflow-auto">
@@ -54,11 +56,13 @@ function AppointmentsPage() {
           <table className="table table-auto w-full">
             <thead>
               <tr>
-                <th>Patient</th>
-                <th>Name</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Status</th>
+                <th className="text-center">Appointment ID</th>
+                <th className="text-center">Patient</th>
+                <th className="text-center">Name</th>
+                <th className="text-center">Date</th>
+                <th className="text-center">Time</th>
+                <th className="text-center">Status</th>
+                <th className="text-center">Medical-record</th>
               </tr>
             </thead>
             <tbody className="font-bold ">
@@ -69,6 +73,7 @@ function AppointmentsPage() {
           </table>
         </div>
       </div>
+      {/* <pre>{JSON.stringify(appointmentsByDoctorId, null, 2)}</pre> */}
     </>
   );
 }

@@ -9,9 +9,9 @@ const nav = [
   { id: 3, name: "Doctors", path: "/admin/doctors" },
   { id: 4, name: "Patients", path: "/admin/patients" },
   { id: 5, name: "Appointments", path: "/admin/appointments" },
-  { id: 6, name: "Medicines", path: "/admin/medicines" },
-  { id: 7, name: "Pharmacy Stock Log", path: "/admin/stock-logs" },
-  { id: 8, name: "Payments", path: "/admin/payments" },
+  { id: 7, name: "Medicines", path: "/admin/medicines" },
+  { id: 8, name: "Pharmacy Stock Log", path: "/admin/stock-logs" },
+  { id: 9, name: "Payments", path: "/admin/payments" },
 ];
 
 function AdminLayout() {

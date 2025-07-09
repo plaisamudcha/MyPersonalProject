@@ -22,7 +22,7 @@ const adminSchema = {
       .required("lastname is required"),
     email: string().email("Email is incorrect").required("Email is required"),
     phone: string()
-      .matches(/^0\d{8,9}$/, "Invalid phone number (0{8,9}xxxxxxxx)")
+      .matches(/^0[89]\d{8}$/, "Invalid phone number (0{8,9}xxxxxxxx)")
       .required("Phone number is required"),
   }).noUnknown(),
   createAppointment: object({
@@ -60,6 +60,16 @@ const adminSchema = {
     medicineId: number()
       .integer("Only integer number")
       .required("MedicineId is required"),
+  }).noUnknown(),
+  createPayment: object({
+    amount: number().min(0, "Positive number").required("Amount is required"),
+    paymentMethod: string().required("Payment method is required"),
+    patientId: number()
+      .integer("Only interger number")
+      .required("PatientId is required"),
+    appointmentId: number()
+      .integer("Only interger number")
+      .required("AppointmentId is required"),
   }).noUnknown(),
 };
 

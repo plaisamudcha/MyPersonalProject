@@ -21,24 +21,42 @@ const MedicinesListPage = lazy(() =>
 const StockLogsListPage = lazy(() =>
   import("../pages/adminPages/StockLog/StockLogsListPage")
 );
+const PrescriptionByAppiontmentIdPage = lazy(() =>
+  import("../pages/adminPages/Prescription/PrescriptionByAppointmentIdPage")
+);
+const PaymentByAppointmentIdPage = lazy(() =>
+  import("../pages/adminPages/Payment/PaymentByAppointmentIdPage")
+);
+const AllPaymentPage = lazy(() =>
+  import("../pages/adminPages/Payment/AllPaymentPage")
+);
+const GoToHomeRouter = lazy(() => import("../pages/GoToHomeRouter"));
 
 const AdminRounter = createBrowserRouter([
   {
     path: "/",
-    element: <AdminLayout />,
+    Component: AdminLayout,
     children: [
-      { index: true, element: <DashboardPage /> },
-      { path: "admin/register/doctor", element: <RegisterDoctorPage /> },
-      { path: "admin/doctors", element: <DoctorListsPage /> },
-      { path: "admin/patients", element: <PatientListPage /> },
+      { index: true, Component: DashboardPage },
+      { path: "admin/register/doctor", Component: RegisterDoctorPage },
+      { path: "admin/doctors", Component: DoctorListsPage },
+      { path: "admin/patients", Component: PatientListPage },
       {
         path: "admin/appointments",
-        element: <AppointmentListPage />,
+        Component: AppointmentListPage,
       },
-      { path: "admin/medicines", element: <MedicinesListPage /> },
-      { path: "admin/stock-logs", element: <StockLogsListPage /> },
-      { path: "admin/payments", element: <p>All list of payments</p> },
-      { path: "*", element: <Navigate to="/" replace /> },
+      { path: "admin/medicines", Component: MedicinesListPage },
+      {
+        path: "admin/prescriptions/:appointmentId",
+        Component: PrescriptionByAppiontmentIdPage,
+      },
+      { path: "admin/stock-logs", Component: StockLogsListPage },
+      { path: "admin/payments", Component: AllPaymentPage },
+      {
+        path: "admin/payments/:appointmentId",
+        Component: PaymentByAppointmentIdPage,
+      },
+      { path: "*", Component: GoToHomeRouter },
     ],
   },
 ]);

@@ -1,6 +1,7 @@
 import prisma from "../src/config/prisma.js";
 import { faker } from "@faker-js/faker";
 import bcrypt from "bcryptjs";
+import { Timeschedule } from "../src/generated/prisma/index.js";
 
 async function main() {
   // สร้าง Admin 1 คน
@@ -14,12 +15,8 @@ async function main() {
     },
   });
 
-  // สร้างคนไข้ 20 คน
-<<<<<<< HEAD
-  for (let i = 0; i < 20; i++) {
-=======
-  for (let i = 0; i < 25; i++) {
->>>>>>> c55d519 (second commit)
+  // สร้างคนไข้
+  for (let i = 0; i < 30; i++) {
     await prisma.user.create({
       data: {
         firstName: faker.person.firstName(),
@@ -32,22 +29,15 @@ async function main() {
             dob: faker.date.birthdate({ min: 18, max: 65, mode: "age" }),
             gender: faker.helpers.arrayElement(["FEMALE", "MALE"]),
             phone: faker.phone.number("08########"),
-<<<<<<< HEAD
-=======
             profileImage: faker.image.avatar(),
->>>>>>> c55d519 (second commit)
           },
         },
       },
     });
   }
 
-  // 👨‍⚕️ สร้างหมอ
-<<<<<<< HEAD
-  for (let i = 0; i < 5; i++) {
-=======
+  // สร้างหมอ
   for (let i = 0; i < 8; i++) {
->>>>>>> c55d519 (second commit)
     await prisma.user.create({
       data: {
         firstName: faker.person.firstName(),
@@ -76,10 +66,7 @@ async function main() {
               "ONCOLOGY",
               "UROLOGY",
             ]),
-<<<<<<< HEAD
-=======
             profileImage: faker.image.avatar(),
->>>>>>> c55d519 (second commit)
           },
         },
       },
@@ -103,32 +90,25 @@ async function main() {
     })),
   });
 
-  function getOfficeTime() {
-    const hour = Math.floor(Math.random() * 10) + 8; // 08:00 - 17:00
-    const minute = [0, 15, 30, 45][Math.floor(Math.random() * 4)];
-    return `${hour.toString().padStart(2, "0")}:${minute
-      .toString()
-      .padStart(2, "0")}`;
-  }
-  // สร้างระบบนัดหมาย 30 รายการ
-  for (let i = 0; i < 30; i++) {
+  // สร้างระบบนัดหมาย 100 รายการ
+  for (let i = 0; i < 100; i++) {
     await prisma.appointment.create({
       data: {
-        patientId: faker.number.int({ min: 1, max: 20 }),
-        doctorId: faker.number.int({ min: 1, max: 5 }),
-        status: faker.helpers.arrayElement(["SCHEDULED", "COMPLETED"]),
-        date: faker.date.between({ from: "2025-06-28", to: "2026-06-28" }),
-        time: getOfficeTime(),
+        patientId: faker.number.int({ min: 1, max: 30 }),
+        doctorId: faker.number.int({ min: 1, max: 8 }),
+        status: faker.helpers.arrayElement(["COMPLETED"]),
+        date: faker.date.between({ from: "2025-03-28", to: "2025-07-07" }),
+        time: "08:00",
         medicalRecord: {
           create: {
             diagnosis: faker.commerce.productDescription(),
             notes: faker.lorem.sentence(),
             prescription: {
-              create: {
-                dosage: `${faker.number.int({ min: 1, max: 3 })} times/day`,
-                duration: `${faker.number.int({ min: 3, max: 7 })} days`,
+              create: Array.from({ length: 3 }).map(() => ({
+                dosage: `${faker.number.int({ min: 1, max: 3 })} tixmes/day`,
+                duration: `${faker.number.int({ min: 3, max: 15 })} days`,
                 medicineId: faker.number.int({ min: 1, max: 30 }),
-              },
+              })),
             },
           },
         },
@@ -137,15 +117,15 @@ async function main() {
   }
 
   // สร้าง stock log 50 รายการ
-  for (let i = 0; i < 50; i++) {
-    await prisma.pharmacyStockLog.create({
-      data: {
-        medicineId: faker.number.int({ min: 1, max: 30 }),
-        change: faker.helpers.arrayElement([10, 20, -5, -10, -15]),
-        reason: faker.lorem.words({ min: 3, max: 7 }),
-      },
-    });
-  }
+  // for (let i = 0; i < 49; i++) {
+  //   await prisma.pharmacyStockLog.create({
+  //     data: {
+  //       medicineId: faker.number.int({ min: 1, max: 30 }),
+  //       change: faker.helpers.arrayElement([10, 20, -5, -10, -15]),
+  //       reason: faker.lorem.words({ min: 3, max: 7 }),
+  //     },
+  //   });
+  // }
 }
 main()
   .then(() => console.log("Seed completed"))

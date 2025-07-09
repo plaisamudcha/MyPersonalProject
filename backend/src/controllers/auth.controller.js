@@ -1,6 +1,7 @@
 import authService from "../services/auth.service.js";
 import createError from "../utils/create-error.util.js";
 import genTokenJWT from "../utils/jwt.util.js";
+import sendResetEmail from "../utils/reset-email.js";
 
 const authController = {
   registerPatient: async (req, res, next) => {
@@ -48,16 +49,22 @@ const authController = {
     try {
       const { email, password } = req.body;
       const foundUser = await authService.loginUser(email, password);
+      console.log(foundUser);
       if (!foundUser) createError(400, "Invalid email or password");
-      const doctor = await authService.getDoctor(foundUser.id);
-      const patient = await authService.getPatient(foundUser.id);
-      const user = doctor || patient;
-      const payload = { id: user.id, role: user.role };
+      const payload = {
+        id:
+          foundUser.role === "PATIENT"
+            ? foundUser.patient?.id
+            : foundUser.role === "DOCTOR"
+            ? foundUser.id
+            : foundUser.id,
+        role: foundUser.role,
+      };
       const accessToken = genTokenJWT.loginToken(payload);
       res.json({
-        message: `Login success, Welcome back ${user.firstName} ${user.lastName}`,
+        message: `Login success, Welcome back ${foundUser.firstName} ${foundUser.lastName}`,
         accessToken,
-        user,
+        user: foundUser,
       });
     } catch (error) {
       next(error);
@@ -70,8 +77,9 @@ const authController = {
       if (!user) createError(400, "Invalid Email");
       const payload = { id: user.id, role: user.role };
       const token = genTokenJWT.forgotPasswordToken(payload);
-      const link = `http://${req.host}/api/auth/reset-password/${token}`;
-      res.json({ message: "Reset link", link });
+      await sendResetEmail(user, token);
+
+      res.json({ message: "Reset password sent to your email" });
     } catch (error) {
       next(error);
     }
@@ -79,7 +87,7 @@ const authController = {
   resetPassword: async (req, res, next) => {
     try {
       const { token } = req.params;
-      const { password, confirmPassword } = req.body;
+      const { password } = req.body;
       const payload = genTokenJWT.checkResetPasswordToken(token);
       const user = await authService.getMe(payload.id);
       if (!user) createError(401, "Invalid token");

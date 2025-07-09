@@ -46,10 +46,16 @@ const authService = {
     });
   },
   loginUser: async (email, password) => {
-    const patient = await prisma.user.findUnique({ where: { email } });
+    const patient = await prisma.user.findUnique({
+      where: { email },
+      include: { doctor: true, patient: true },
+    });
     if (!patient) return null;
     const isMatch = await bcrypt.compare(password, patient.password);
     return isMatch ? patient : null;
+  },
+  getMe: async (id) => {
+    return await prisma.user.findUnique({ where: { id: Number(id) } });
   },
   getDoctor: async (id) => {
     return await prisma.user.findUnique({

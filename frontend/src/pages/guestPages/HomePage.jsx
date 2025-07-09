@@ -24,28 +24,28 @@ function HomePage() {
           </Link>
         </div>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-        <Link
-          className="border rounded-xl p-6 text-center hover:shadow-md transition"
-          to="/publicDoctor"
-        >
-          <h3 className="font-semibold text-lg mb-2">Our Doctors</h3>
-          <p className="text-gray-600">Meet our experienced team of doctors.</p>
-        </Link>
-        <div className="border rounded-xl p-6 text-center hover:shadow-md transition">
-          <h3 className="font-semibold text-lg mb-2">Our Services</h3>
-          <p className="text-gray-600">
-            Explore the various medical services we provide.
-          </p>
+      <section className="py-12 px-4">
+        <div className="max-w-6xl mx-auto grid gap-6 md:grid-cols-3">
+          <div className="card bg-base-200 shadow-md">
+            <div className="card-body text-center">
+              <h2 className="card-title justify-center">Our Doctors</h2>
+              <p>Meet our experienced team of doctors.</p>
+            </div>
+          </div>
+          <div className="card bg-base-200 shadow-md">
+            <div className="card-body text-center">
+              <h2 className="card-title justify-center">Our Services</h2>
+              <p>Explore the various medical services we provide.</p>
+            </div>
+          </div>
+          <div className="card bg-base-200 shadow-md">
+            <div className="card-body text-center">
+              <h2 className="card-title justify-center">Contact Us</h2>
+              <p>Get in touch with us for any inquiries or assistance.</p>
+            </div>
+          </div>
         </div>
-        <div className="border rounded-xl p-6 text-center hover:shadow-md transition">
-          <h3 className="font-semibold text-lg mb-2">Contact Us</h3>
-          <p className="text-gray-600">
-            Get in touch with us for any inquiries or assistance.
-          </p>
-        </div>
-      </div>
+      </section>{" "}
     </>
   );
 }

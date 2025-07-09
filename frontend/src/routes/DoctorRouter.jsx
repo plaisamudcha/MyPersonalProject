@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from "react-router";
+import { createBrowserRouter } from "react-router";
 import { lazy } from "react";
 
 const DoctorLayout = lazy(() => import("../layouts/DoctorLayout"));
@@ -6,27 +6,37 @@ const Dashboard = lazy(() => import("../pages/doctorPages/Dashboard"));
 const AppointmentsPage = lazy(() =>
   import("../pages/doctorPages/AppointmentsPage")
 );
+const AllMedicalRecordsPage = lazy(() =>
+  import("../pages/doctorPages/AllMedicalRecordsPage")
+);
+const MedicalRecordsPage = lazy(() =>
+  import("../pages/doctorPages/MedicalRecordsPage")
+);
+const AllPrescriptionsPage = lazy(() =>
+  import("../pages/doctorPages/AllPrescriptionsPage")
+);
+const GoToHomeRouter = lazy(() => import("../pages/GoToHomeRouter"));
 
 const DoctorRouter = createBrowserRouter([
   {
     path: "/",
-    element: <DoctorLayout />,
+    Component: DoctorLayout,
     children: [
-      { index: true, element: <Dashboard /> },
-      { path: "doctor/appointments", element: <AppointmentsPage /> },
+      { index: true, Component: Dashboard },
+      { path: "doctor/appointments", Component: AppointmentsPage },
       {
         path: "doctor/medical-records",
-        element: <p>Doctor's medical-records</p>,
+        Component: AllMedicalRecordsPage,
       },
       {
-        path: "doctor/medical-records/:id",
-        element: <p>Edit medical-records by id</p>,
+        path: "doctor/medical-records/:patientId/:appointmentId",
+        Component: MedicalRecordsPage,
       },
       {
         path: "doctor/prescriptions",
-        element: <p>Create prescription</p>,
+        Component: AllPrescriptionsPage,
       },
-      { path: "*", element: <Navigate to="/" replace /> },
+      { path: "*", Component: GoToHomeRouter },
     ],
   },
 ]);

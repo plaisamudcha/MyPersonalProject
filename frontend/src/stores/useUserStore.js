@@ -4,11 +4,10 @@ import { persist } from "zustand/middleware";
 
 const useUserStore = create(
   persist(
-    (set, get) => ({
+    (set) => ({
       user: null,
       doctors: [],
       accessToken: "",
-      resetToken: "",
       login: async (input) => {
         const res = await authToBackend.login(input);
         set({ user: res.data.user, accessToken: res.data.accessToken });
@@ -16,14 +15,10 @@ const useUserStore = create(
       },
       forgotPassword: async (input) => {
         const res = await authToBackend.forgotPassword(input);
-        let arrLink = res.data.link.split("/");
-        let token = arrLink[arrLink.length - 1];
-        set({ resetToken: token });
         return res;
       },
-      resetPassword: async (input) => {
-        const res = await authToBackend.resetPassword(input, get().resetToken);
-        set({ resetToken: "" });
+      resetPassword: async (input, token) => {
+        const res = await authToBackend.resetPassword(input, token);
         return res;
       },
       getPublicDoctor: async () => {

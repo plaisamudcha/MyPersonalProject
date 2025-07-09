@@ -73,15 +73,15 @@ function AppointmentsListPage() {
         <table className="table table-auto w-full">
           <thead>
             <tr>
-              <th>VN</th>
-              <th>Doctor Id</th>
-              <th>Doctor Name</th>
-              <th>HN</th>
-              <th>Patient Name</th>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Status</th>
-              <th>Edit appointment</th>
+              <th className="text-center">Appointment ID</th>
+              <th className="text-center">Doctor ID</th>
+              <th className="text-center">Doctor Name</th>
+              <th className="text-center">Patient ID</th>
+              <th className="text-center">Patient Name</th>
+              <th className="text-center">Date</th>
+              <th className="text-center">Time</th>
+              <th className="text-center">Status</th>
+              <th className="text-center">Edit appointment</th>
             </tr>
           </thead>
           <tbody>
@@ -122,6 +122,7 @@ function AppointmentsListPage() {
           </form>
         </div>
       </dialog>
+      {/* <pre>{JSON.stringify(appointments, null, 2)}</pre> */}
     </div>
   );
 }

@@ -16,7 +16,7 @@ const authMiddleware = {
   },
   isRole: (role) => (req, res, next) => {
     try {
-      if (req.user.role !== role) createError(401, `Invalid role`);
+      if (!role.includes(req.user.role)) createError(401, `Invalid role`);
       next();
     } catch (error) {
       next(error);

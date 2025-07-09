@@ -2,9 +2,12 @@ import { create } from "zustand";
 import adminToBackend from "../api/adminApi";
 import useUserStore from "./useUserStore";
 import doctorToBackend from "../api/doctorApi";
+import patientToBackend from "../api/patientApi";
 
 const useAppointmentStore = create((set, get) => ({
   appointments: [],
+  appointmentsByPatientId: [],
+  appointmentsByDoctorId: [],
   getAllAppointments: async () => {
     const token = useUserStore.getState().accessToken;
     const res = await adminToBackend.getAllAppointments(token);
@@ -37,7 +40,13 @@ const useAppointmentStore = create((set, get) => ({
   getAllAppointmentsByDoctor: async () => {
     const token = useUserStore.getState().accessToken;
     const res = await doctorToBackend.getAllAppointments(token);
-    set({ appointments: res.data.appointments });
+    set({ appointmentsByDoctorId: res.data.appointments });
+    return res;
+  },
+  getAppointmentsByPatientId: async () => {
+    const token = useUserStore.getState().accessToken;
+    const res = await patientToBackend.getAppointmentsByPatientId(token);
+    set({ appointmentsByPatientId: res.data.appointments });
     return res;
   },
 }));

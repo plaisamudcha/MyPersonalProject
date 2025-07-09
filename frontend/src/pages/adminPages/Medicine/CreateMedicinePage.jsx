@@ -62,6 +62,7 @@ function CreateMedicinePage({ resetForm }) {
                 errors={errors}
               />
               <InputForm
+                type="number"
                 name={"pricePerUnit"}
                 label={"pricePerUnit"}
                 register={register("pricePerUnit")}

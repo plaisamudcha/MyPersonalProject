@@ -20,6 +20,11 @@ paymentsRoute.post(
   paymentsController.createPayment
 );
 paymentsRoute.get(
+  "/appointment/:appointmentId",
+  authMiddleware.isRole("ADMIN"),
+  paymentsController.getPaymentByAppointmentId
+);
+paymentsRoute.get(
   "/patients",
   authMiddleware.isRole("PATIENT"),
   paymentsController.getPaymentByPatientId

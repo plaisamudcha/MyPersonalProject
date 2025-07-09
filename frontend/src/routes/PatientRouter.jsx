@@ -2,21 +2,16 @@ import { createBrowserRouter, Navigate } from "react-router";
 import { lazy } from "react";
 
 const PatientLayout = lazy(() => import("../layouts/PatientLayout"));
+const DashboardPage = lazy(() => import("../pages/patientPages/DashboardPage"));
+const GoToHomeRouter = lazy(() => import("../pages/GoToHomeRouter"));
 
 const PatientRouter = createBrowserRouter([
   {
     path: "/",
-    element: <PatientLayout />,
+    Component: PatientLayout,
     children: [
-      { index: true, element: <p>Dashboard</p> },
-      { path: "patient/appointments", element: <p>Patient's Dashboard</p> },
-      {
-        path: "patient/medical-records",
-        element: <p>Patient's appointments</p>,
-      },
-      { path: "patient/payments", element: <p>Patient's payments</p> },
-      { path: "patient/profile", element: <p>Edit patient's profile</p> },
-      { path: "*", element: <Navigate to="/" replace /> },
+      { index: true, Component: DashboardPage },
+      { path: "*", Component: GoToHomeRouter },
     ],
   },
 ]);

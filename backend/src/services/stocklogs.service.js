@@ -29,6 +29,11 @@ const stocksService = {
       data: { stock: Number(old) + Number(change) },
     });
   },
+  updateStockStatus: async () => {
+    return await prisma.pharmacyStockLog.update({
+      data: { stockLogCreated: true },
+    });
+  },
 };
 
 export default stocksService;

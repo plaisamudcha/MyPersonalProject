@@ -25,7 +25,6 @@ function ForgotPasswordPage({ resetForm }) {
       const res = await forgotPassword(data);
       toast.success(res.data.message);
       document.getElementById("forgot-form").close();
-      document.getElementById("reset-form").showModal();
     } catch (error) {
       const errMsg = error.response?.data?.error || error.message;
       toast.error(errMsg);

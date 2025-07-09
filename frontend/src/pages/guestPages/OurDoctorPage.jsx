@@ -9,12 +9,20 @@ function OurDoctorPage() {
     getPublicDoctor();
   }, []);
   return (
-    <div className="w-3/5 mx-auto mt-15">
-      <h1 className="text-4xl font-bold text-center mb-10">Our Doctors</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {doctors.map((user, index) => (
-          <DoctorForm key={index} user={user} />
-        ))}
+    <div className="w-screen mx-auto overflow-auto">
+      <div className="min-h-screen bg-base-100 py-12 px-4">
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-bold text-neutral">Our Doctors</h1>
+          <p className="text-gray-500 mt-2">
+            Meet our experienced team of professionals
+          </p>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+          {doctors.map((user, index) => (
+            <DoctorForm key={index} user={user} />
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -12,12 +12,20 @@ const appointmentApi = axios.create({
   baseURL: "http://localhost:3026/api/appointments",
 });
 
+const prescriptionApi = axios.create({
+  baseURL: "http://localhost:3026/api/prescriptions",
+});
+
 const medicineApi = axios.create({
   baseURL: "http://localhost:3026/api/medicines",
 });
 
 const stockLogApi = axios.create({
   baseURL: "http://localhost:3026/api/stock-logs",
+});
+
+const paymentApi = axios.create({
+  baseURL: "http://localhost:3026/api/payments",
 });
 
 const bearerToken = (token) => ({
@@ -52,6 +60,17 @@ const adminToBackend = {
   getAllStockLogs: (token) => stockLogApi.get(`/`, bearerToken(token)),
   createStockLog: (body, token) =>
     stockLogApi.post("/", body, bearerToken(token)),
+  getAllPrescriptions: (id, token) =>
+    prescriptionApi.get(`/appointment/${id}`, bearerToken(token)),
+  createPayment: (input, token) =>
+    paymentApi.post("/", input, bearerToken(token)),
+  getAllPayments: (token) => paymentApi.get("/", bearerToken(token)),
+  getPaymentByAppointmentId: (id, token) =>
+    paymentApi.get(`/appointment/${id}`, bearerToken(token)),
+  upDatePaymentStatus: (id, input, token) =>
+    paymentApi.patch(`/${id}`, input, bearerToken(token)),
+  updatePrescriptionByid: (id, body, token) =>
+    prescriptionApi.patch(`${id}`, body, bearerToken(token)),
 };
 
 export default adminToBackend;

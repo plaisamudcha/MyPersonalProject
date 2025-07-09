@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router";
 import useAppointmentStore from "../stores/useAppointmentStore";
 import { toast } from "react-toastify";
 
 function AppointmentsForm({ el }) {
+  const navi = useNavigate();
   const updateStatusAppointment = useAppointmentStore(
     (state) => state.updateStatusAppointment
   );
@@ -21,8 +23,7 @@ function AppointmentsForm({ el }) {
   };
   const hdlUpdate = async () => {
     try {
-      const updateStatus =
-        el.status === "SCHEDULED" ? "COMPLETED" : "SCHEDULED";
+      const updateStatus = el.status === "SCHEDULED" ? "CANCELED" : "SCHEDULED";
       const data = { status: updateStatus };
       const res = await updateStatusAppointment(el.id, data);
       toast.success(res.data.message);
@@ -38,29 +39,40 @@ function AppointmentsForm({ el }) {
 
   return (
     <tr>
-      <td>{el.id}</td>
-      <td>{el.doctor.id}</td>
-      <td>
+      <td className="text-center">{el.id}</td>
+      <td className="text-center">{el.doctor.id}</td>
+      <td className="text-center">
         {el.doctor.firstName} {el.doctor.lastName}
       </td>
-      <td>{el.patient.id}</td>
-      <td>
+      <td className="text-center">{el.patient.id}</td>
+      <td className="text-center">
         {el.patient.firstName} {el.patient.lastName}
       </td>
-      <td>{localDate}</td>
-      <td>{el.time}</td>
-      <td
-        className={`badge ${
-          el.status === "COMPLETED" ? "badge-success" : "badge-warning"
-        } mt-5 cursor-pointer`}
-        onClick={hdlUpdate}
-      >
-        {el.status}
+      <td className="text-center">{localDate}</td>
+      <td className="text-center">{el.time}</td>
+      <td className="text-center">
+        {el.status === "COMPLETED" ? (
+          <p className="badge badge-success">Completed</p>
+        ) : (
+          <p
+            className={`badge ${
+              el.status === "COMPLETED"
+                ? "badge-success"
+                : el.status === "SCHEDULED"
+                ? "badge-warning"
+                : "badge-error"
+            } cursor-pointer`}
+            onClick={hdlUpdate}
+          >
+            {el.status}
+          </p>
+        )}
       </td>
-      <td>
-        <div className="flex gap-2">
+      <td className="text-center">
+        <div className="flex gap-2 justify-center">
           <button
             className="btn btn-info "
+            disabled={el.status === "COMPLETED" || el.status === "CANCELED"}
             onClick={() =>
               document
                 .getElementById(`updateAppointment-form${el.id}`)
@@ -69,8 +81,12 @@ function AppointmentsForm({ el }) {
           >
             Edit
           </button>
-          <button className="btn btn-neutral" onClick={hdlDelete}>
-            Delete
+          <button
+            className="btn btn-primary"
+            disabled={el.status === "COMPLETED" || el.status === "CANCELED"}
+            onClick={() => navi(`/admin/prescriptions/${el.id}`)}
+          >
+            See Prescription
           </button>
         </div>
       </td>

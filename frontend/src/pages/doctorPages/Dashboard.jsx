@@ -13,24 +13,70 @@ import defaultImage from "../../assets/defaultImage.jpg";
 import patientImage from "../../assets/patientImage.png";
 import appointmentImage from "../../assets/appointmentImage.jpg";
 import medicalImage from "../../assets/medicalImage.jpg";
+import useAppointmentStore from "../../stores/useAppointmentStore";
+import useMedicalRecordStore from "../../stores/useMedicalRecordStore";
 
-const mockData = [
-  { month: "Jan", appointments: 8 },
-  { month: "Feb", appointments: 14 },
-  { month: "Mar", appointments: 10 },
-  { month: "Apr", appointments: 18 },
-  { month: "May", appointments: 20 },
-  { month: "Jun", appointments: 12 },
-];
+// const mockData = [
+//   { month: "Jan", appointments: 8 },
+//   { month: "Feb", appointments: 14 },
+//   { month: "Mar", appointments: 10 },
+//   { month: "Apr", appointments: 18 },
+//   { month: "May", appointments: 20 },
+//   { month: "Jun", appointments: 12 },
+// ];
 
 function Dashboard() {
   const user = useUserStore((state) => state.user);
-  const [data, setData] = useState([]);
+  const appointmentsByDoctorId = useAppointmentStore(
+    (state) => state.appointmentsByDoctorId
+  );
+  const getAllAppointmentsByDoctor = useAppointmentStore(
+    (state) => state.getAllAppointmentsByDoctor
+  );
+  const medicalRecords = useMedicalRecordStore(
+    (state) => state.medicalRecords ?? []
+  );
 
   useEffect(() => {
-    // TODO: fetch from backend
-    setData(mockData);
+    getAllAppointmentsByDoctor();
   }, []);
+  const monthOrder = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const uniquePatientCount = appointmentsByDoctorId.reduce(
+    (acc, curr) => {
+      if (!acc.ids.includes(curr.patientId)) {
+        acc.ids.push(curr.patientId);
+      }
+      return acc;
+    },
+    { ids: [] }
+  ).ids.length;
+
+  const lineData = Object.values(
+    appointmentsByDoctorId
+      .filter((item) => item.status === "COMPLETED")
+      .reduce((prev, curr) => {
+        const date = new Date(curr.date);
+        const month = date.toLocaleString("en-US", { month: "short" });
+        prev[month] = prev[month] || { name: month, value: 0 };
+        prev[month].value += 1;
+        return prev;
+      }, {})
+  ).sort((a, b) => monthOrder.indexOf(a.name) - monthOrder.indexOf(b.name));
+  console.log(lineData);
   return (
     <div className="flex flex-col gap-3">
       <div className="flex justify-between items-center border rounded-lg p-8 text-shadow-md">
@@ -58,7 +104,7 @@ function Dashboard() {
               <img src={patientImage} alt="patientImage" />
             </div>
           </div>
-          <p>35</p>
+          <p>{uniquePatientCount}</p>
           <p>Patients</p>
         </div>
         <div className="flex flex-col items-center justify-center border rounded-lg font-bold w-32 h-32 border-gray-400">
@@ -68,7 +114,7 @@ function Dashboard() {
             </div>
           </div>
 
-          <p>12</p>
+          <p>{appointmentsByDoctorId.length}</p>
           <p>Appointments</p>
         </div>
         <div className="flex flex-col items-center justify-center border rounded-lg font-bold w-32 h-32 border-gray-400">
@@ -77,7 +123,7 @@ function Dashboard() {
               <img src={medicalImage} alt="medicalImage" />
             </div>
           </div>
-          <p>20</p>
+          <p>{medicalRecords.length}</p>
           <p>Medical records</p>
         </div>
       </div>
@@ -85,7 +131,7 @@ function Dashboard() {
         <div className="bg-white rounded-xl shadow-lg p-6">
           <h2 className="text-xl font-semibold mb-4">Monthly Appointments</h2>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={data}>
+            <LineChart data={lineData}>
               <CartesianGrid stroke="#e0e0e0" strokeDasharray="5 5" />
               <XAxis dataKey="month" />
               <YAxis allowDecimals={false} />

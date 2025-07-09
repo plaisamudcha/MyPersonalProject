@@ -61,7 +61,7 @@ model Appointment {
   patient       Patient        @relation(fields: [patientId], references: [id])
   patientId     Int
   medicalRecord MedicalRecord?
-  Payment       Payment?
+  payment       Payment?
 }
 
 model MedicalRecord {
@@ -75,9 +75,10 @@ model MedicalRecord {
 }
 
 model Prescription {
-  id       Int    @id @default(autoincrement())
-  dosage   String
-  duration String
+  id          Int     @id @default(autoincrement())
+  dosage      String
+  duration    String
+  createStock Boolean @default(false)
 
   medicalRecord   MedicalRecord @relation(fields: [medicalRecordId], references: [id], onDelete: Cascade)
   medicalRecordId Int
@@ -110,7 +111,7 @@ model Payment {
   amount        Float
   status        PaymentStatus @default(PENDING)
   paidAt        DateTime?
-  paymentMethod String
+  paymentMethod PaymentMethod
   patient       Patient       @relation(fields: [patientId], references: [id])
   patientId     Int
   appointment   Appointment   @relation(fields: [appointmentId], references: [id])
@@ -166,4 +167,32 @@ enum MedicineForm {
   CAPSULE
   INJECTION
   CREAM
+}
+
+enum PaymentMethod {
+  CASH
+  CREDITCARD
+  MOBILEBANKING
+  PROMPTPAY
+}
+
+enum Timeschedule {
+  HOUR_08_00 @map("08:00")
+  HOUR_08_30 @map("08:30")
+  HOUR_09_00 @map("09:00")
+  HOUR_09_30 @map("09:30")
+  HOUR_10_00 @map("10:00")
+  HOUR_10_30 @map("10:30")
+  HOUR_11_00 @map("11:00")
+  HOUR_11_30 @map("11:30")
+  HOUR_12_00 @map("12:00")
+  HOUR_12_30 @map("12:30")
+  HOUR_13_00 @map("13:00")
+  HOUR_13_30 @map("13:30")
+  HOUR_14_00 @map("14:00")
+  HOUR_14_30 @map("14:30")
+  HOUR_15_00 @map("15:00")
+  HOUR_15_30 @map("15:30")
+  HOUR_16_00 @map("16:00")
+  HOUR_16_30 @map("16:30")
 }

@@ -25,8 +25,8 @@ medicalsRoute.get(
   medicalsController.getMedicalRecordByDoctorId
 );
 medicalsRoute.get(
-  "/patients",
-  authMiddleware.isRole("PATIENT"),
+  "/patients/:patientId",
+  authMiddleware.isRole("DOCTOR"),
   medicalsController.getMedicalRecordByPatientId
 );
 medicalsRoute.get(

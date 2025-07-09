@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputForm from "../../../components/InputForm";
 import { toast } from "react-toastify";
 import adminSchema from "../../../validation/adminValidate/adminSchema";
 import useAppointmentStore from "../../../stores/useAppointmentStore";
-import dayjs from "dayjs";
+import useDoctorStore from "../../../stores/useDoctorStore";
+import usePatientStore from "../../../stores/usePatientStore";
 
 const time = [
   { id: 1, value: "08:00" },
@@ -27,12 +28,33 @@ const time = [
 ];
 
 function CreateAppointmentPage({ resetForm }) {
+  const doctors = useDoctorStore((state) => state.doctors);
+  const getAllDoctors = useDoctorStore((state) => state.getAllDoctors);
+  const patients = usePatientStore((state) => state.patients);
+  const getAllPatients = usePatientStore((state) => state.getAllPatients);
   const createAppointment = useAppointmentStore(
     (state) => state.createAppointment
   );
   useEffect(() => {
     reset();
   }, [resetForm]);
+  useEffect(() => {
+    getAllDoctors();
+    getAllPatients();
+  }, []);
+
+  const doctorArray = doctors.map((item, idx) => ({
+    id: idx,
+    value: item.id,
+    name: item.user?.firstName + " " + item.user?.lastName,
+  }));
+
+  const patientArray = patients.map((item, idx) => ({
+    id: idx,
+    value: item.id,
+    name: item.user?.firstName + " " + item.user?.lastName,
+  }));
+
   const {
     register,
     reset,
@@ -41,10 +63,10 @@ function CreateAppointmentPage({ resetForm }) {
   } = useForm({
     resolver: yupResolver(adminSchema.createAppointment),
     shouldFocusError: true,
+    defaultValues: { time: "" },
   });
   const onUpdate = async (data) => {
     try {
-      console.log("data", data);
       const res = await createAppointment(data);
       document.getElementById(`createAppointment-form`).close();
       toast.success(res.data.message);
@@ -70,20 +92,38 @@ function CreateAppointmentPage({ resetForm }) {
                 register={register("date")}
                 errors={errors}
               />
-              <InputForm
-                type="number"
-                name={"doctorId"}
-                label={"doctorId"}
-                register={register("doctorId")}
-                errors={errors}
-              />
-              <InputForm
-                type="number"
-                name={"patientId"}
-                label={"patientId"}
-                register={register("patientId")}
-                errors={errors}
-              />
+              <div className="flex-1">
+                <label className="font-bold">
+                  {" "}
+                  DoctorId
+                  <select
+                    {...register("doctorId")}
+                    className="select select-accent mt-2"
+                  >
+                    {doctorArray.map((el) => (
+                      <option key={el.id} value={el.value}>
+                        {`${el.value} : ${el.name}`}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              <div className="flex-1">
+                <label className="font-bold">
+                  {" "}
+                  PatientId
+                  <select
+                    {...register("patientId")}
+                    className="select select-accent mt-2"
+                  >
+                    {patientArray.map((el) => (
+                      <option key={el.id} value={el.value}>
+                        {`${el.value} : ${el.name}`}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
               <div>
                 <label className="block mb-1 font-medium">
                   Time appointment

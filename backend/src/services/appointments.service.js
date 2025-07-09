@@ -79,7 +79,7 @@ const appointmentsService = {
           include: {
             appointments: {
               where: { OR: [{ status: "COMPLETED" }, { status: "SCHEDULED" }] },
-              omit: { doctorId: true, patientId: true },
+              omit: { doctorId: true },
               include: {
                 patient: {
                   omit: { id: true, userId: true, deletedAt: true },
@@ -98,14 +98,23 @@ const appointmentsService = {
     return result.doctor.appointments;
   },
   getAppointmentByPatientId: async (id) => {
-    const result = await prisma.user.findUnique({
+    const result = await prisma.patient.findUnique({
       where: { id: Number(id) },
-      omit: { password: true, createdAt: true },
       include: {
-        patient: { include: { appointments: true }, omit: { userId: true } },
+        user: { select: { firstName: true, lastName: true } },
+        appointments: {
+          orderBy: { date: "desc" },
+          include: {
+            doctor: {
+              include: {
+                user: { select: { firstName: true, lastName: true } },
+              },
+            },
+          },
+        },
       },
     });
-    return result.patient.appointments;
+    return result;
   },
   createAppointment: async (date, time, doctorId, patientId) => {
     return await prisma.appointment.create({

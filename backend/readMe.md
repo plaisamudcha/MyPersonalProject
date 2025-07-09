@@ -1,10 +1,6 @@
 # CC20 My-Project (PoRPaI Health Care System) BACKEND
 
-<<<<<<< HEAD
-![ER-DIAGRAM](../backend/src/assets/ER-diagram.jpg)
-=======
-![ER-DIAGRAM](../backend/src/asse/apts/ER-diagram.jpg)
->>>>>>> c55d519 (second commit)
+![ER-DIAGRAM](./src/assets/ER-diagram.jpg)
 
 ## สรุป ER-DIAGRAM
 

@@ -25,29 +25,79 @@ const medicalsService = {
       omit: { password: true, createdAt: true },
       include: {
         doctor: {
-          include: { appointments: { include: { medicalRecord: true } } },
+          include: {
+            appointments: {
+              include: {
+                medicalRecord: true,
+                patient: {
+                  omit: { id: true, userId: true, deletedAt: true },
+                  include: {
+                    user: { select: { firstName: true, lastName: true } },
+                  },
+                },
+              },
+              orderBy: { date: "desc" },
+            },
+          },
         },
       },
     });
-    return result.doctor.appointments.reduce((prev, curr) => {
-      prev.push(curr.medicalRecord);
-      return prev;
-    }, []);
+    return result.doctor.appointments.map((item) => ({
+      medicalRecord: {
+        id: item.medicalRecord?.id || "-",
+        diagnosis: item.medicalRecord?.diagnosis || "-",
+        notes: item.medicalRecord?.notes || "-",
+        createdAt: item.medicalRecord?.createdAt || "-",
+        patient: {
+          dob: item.patient.dob,
+          gender: item.patient.gender,
+          phone: item.patient.phone,
+          profileImage: item.patient.profileImage,
+          firstName: item.patient.user.firstName,
+          lastName: item.patient.user.lastName,
+        },
+      },
+    }));
   },
-  getMedicalRecordByPatientId: async (id) => {
+  getMedicalRecordByPatientId: async (id, patientId) => {
     const result = await prisma.user.findUnique({
       where: { id: Number(id) },
       omit: { password: true, createdAt: true },
       include: {
-        patient: {
-          include: { appointments: { include: { medicalRecord: true } } },
+        doctor: {
+          include: {
+            appointments: {
+              where: { patientId: Number(patientId) },
+              include: {
+                medicalRecord: { include: { prescription: true } },
+                patient: {
+                  omit: { userId: true, deletedAt: true },
+                  include: {
+                    user: { select: { firstName: true, lastName: true } },
+                  },
+                },
+              },
+            },
+          },
         },
       },
     });
-    return result.patient.appointments.reduce((prev, curr) => {
-      prev.push(curr.medicalRecord);
+    return result.doctor.appointments.reduce((prev, curr, index) => {
+      if (index === 0) {
+        prev["id"] = curr.patient.id;
+        prev["dob"] = curr.patient.dob;
+        prev["gender"] = curr.patient.gender;
+        prev["phone"] = curr.patient.phone;
+        prev["profileImage"] = curr.patient.profileImage;
+        prev["firstName"] = curr.patient.user.firstName;
+        prev["lastName"] = curr.patient.user.lastName;
+        prev["medicalRecord"] = [];
+      }
+      if (curr.medicalRecord) {
+        prev["medicalRecord"].push(curr.medicalRecord);
+      }
       return prev;
-    }, []);
+    }, {});
   },
 };
 

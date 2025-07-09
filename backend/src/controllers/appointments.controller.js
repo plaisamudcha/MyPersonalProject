@@ -24,10 +24,12 @@ const appointmentsController = {
   },
   getAppointmentByDoctorId: async (req, res, next) => {
     try {
+      console.log("req.user.id", req.user.id);
       const appointments = await appointmentsService.getAppointmentByDoctorId(
         req.user.id
       );
       if (!appointments) createError(400, "Doctor not found!!!");
+      console.log(appointments);
       res.json({ appointments });
     } catch (error) {
       next(error);

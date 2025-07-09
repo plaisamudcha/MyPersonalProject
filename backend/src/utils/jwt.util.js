@@ -13,7 +13,7 @@ const genTokenJWT = {
   forgotPasswordToken: (payload) => {
     return jwt.sign(payload, process.env.RESET_KEY, {
       algorithm: "HS256",
-      expiresIn: "1d",
+      expiresIn: "30m",
     });
   },
   checkResetPasswordToken: (token) => {

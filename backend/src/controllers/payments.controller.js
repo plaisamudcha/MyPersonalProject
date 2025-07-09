@@ -62,6 +62,17 @@ const paymentsController = {
       next(error);
     }
   },
+  getPaymentByAppointmentId: async (req, res, next) => {
+    try {
+      const { appointmentId } = req.params;
+      const payments = await paymentsService.getPaymentByAppointmentId(
+        appointmentId
+      );
+      res.json({ payments });
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 export default paymentsController;

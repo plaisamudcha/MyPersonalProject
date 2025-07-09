@@ -48,7 +48,7 @@ appointmentsRoute.put(
 appointmentsRoute.patch(
   "/:id",
   validate(authSchema.patchAppointment),
-  authMiddleware.isRole("ADMIN"),
+  authMiddleware.isRole(["ADMIN", "DOCTOR"]),
   appointmentsController.pathAppointmentById
 );
 

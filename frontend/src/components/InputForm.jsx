@@ -16,6 +16,7 @@ function InputForm({
         className="input w-full input-accent"
         {...register}
         placeholder={placeholder}
+        step="any"
       />
       {errors[name] && (
         <p className="text-sm text-red-400">{errors[name]?.message}</p>

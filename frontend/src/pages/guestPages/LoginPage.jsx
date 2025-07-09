@@ -106,16 +106,6 @@ export default function LoginPage() {
           </form>
         </div>
       </dialog>
-      <dialog id="reset-form" className="modal" onClose={hdlClose}>
-        <div className="modal-box rounded-lg">
-          <ResetPasswordPage resetForm={resetForm} />
-          <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-              ✕
-            </button>
-          </form>
-        </div>
-      </dialog>
     </>
   );
 }

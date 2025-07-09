@@ -9,9 +9,9 @@ const prescriptionsRoute = express.Router();
 prescriptionsRoute.use(authMiddleware.checkToken);
 
 prescriptionsRoute.get(
-  "/",
-  authMiddleware.isRole("ADMIN"),
-  prescriptionsController.getAllPrescriptions
+  "/doctors",
+  authMiddleware.isRole("DOCTOR"),
+  prescriptionsController.getPrescriptionByDoctorId
 );
 prescriptionsRoute.post(
   "/",
@@ -20,15 +20,19 @@ prescriptionsRoute.post(
   prescriptionsController.createPrescription
 );
 prescriptionsRoute.get(
-  "/doctors",
-  authMiddleware.isRole("DOCTOR"),
-  prescriptionsController.getPrescriptionByDoctorId
-);
-prescriptionsRoute.get(
-  "/:id",
+  "/appointment/:appointmentId",
   authMiddleware.isRole("ADMIN"),
-  prescriptionsController.getPrescriptionById
+  prescriptionsController.getAllPrescriptionsByAppointmentId
 );
+prescriptionsRoute.patch(
+  "/:id",
+  prescriptionsController.updatePrescriptionById
+),
+  prescriptionsRoute.get(
+    "/:id",
+    authMiddleware.isRole("ADMIN"),
+    prescriptionsController.getPrescriptionById
+  );
 prescriptionsRoute.delete(
   "/:id",
   authMiddleware.isRole("DOCTOR"),
