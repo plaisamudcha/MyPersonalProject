@@ -99,7 +99,6 @@ function Dashboard() {
       }, {})
   ).sort((a, b) => monthOrder.indexOf(a.name) - monthOrder.indexOf(b.name));
 
-  console.log(lineData);
   const barData = Object.values(
     medicines.reduce((prev, curr) => {
       const medName = curr.name || "Unknown";

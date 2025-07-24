@@ -16,15 +16,16 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  firstName String
-  lastName  String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  role      RoleType @default(PATIENT)
-  doctor    Doctor?
-  patient   Patient?
+  id           Int            @id @default(autoincrement())
+  firstName    String
+  lastName     String
+  email        String         @unique
+  password     String
+  createdAt    DateTime       @default(now())
+  role         RoleType       @default(PATIENT)
+  doctor       Doctor?
+  patient      Patient?
+  refreshToken RefreshToken[]
 }
 
 model Patient {
@@ -117,6 +118,17 @@ model Payment {
   patientId     Int
   appointment   Appointment   @relation(fields: [appointmentId], references: [id])
   appointmentId Int           @unique
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
 }
 
 enum RoleType {

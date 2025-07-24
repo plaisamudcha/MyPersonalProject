@@ -8,6 +8,9 @@ const useUserStore = create(
       user: null,
       doctors: [],
       accessToken: "",
+      resetToken: "",
+      setAccessToken: (token) => set({ accessToken: token }),
+      setResetToken: (token) => set({ resetToken: token }),
       login: async (input) => {
         const res = await authToBackend.login(input);
         set({ user: res.data.user, accessToken: res.data.accessToken });

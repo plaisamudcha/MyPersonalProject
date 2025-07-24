@@ -35,4 +35,6 @@ authRoute.post(
 );
 authRoute.get("/publicDoctor", authController.getDoctors);
 
+authRoute.get("/refreshToken", authController.refreshToken);
+
 export default authRoute;
