@@ -1,4 +1,4 @@
-function MedicinesForm({ el }) {
+function MedicinesForm({ el, setIsOpenEdit }) {
   return (
     <tr>
       <td>{el.id}</td>
@@ -25,9 +25,7 @@ function MedicinesForm({ el }) {
         <div className="flex gap-2">
           <button
             className="btn btn-neutral "
-            onClick={() =>
-              document.getElementById(`updateMedicine-form${el.id}`).showModal()
-            }
+            onClick={() => setIsOpenEdit(el.id)}
           >
             Edit
           </button>

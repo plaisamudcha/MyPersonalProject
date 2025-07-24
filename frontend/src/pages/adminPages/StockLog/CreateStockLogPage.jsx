@@ -7,7 +7,7 @@ import adminSchema from "../../../validation/adminValidate/adminSchema";
 import useStockLogStore from "../../../stores/useStockLogStore";
 import usePrescriptionStore from "../../../stores/usePrescriptionStore";
 
-function CreateStockLogPage({ appointmentId, item }) {
+function CreateStockLogPage({ item, resetForm }) {
   const createStockLog = useStockLogStore((state) => state.createStockLog);
   const updatePrescriptionById = usePrescriptionStore(
     (state) => state.updatePrescriptionById
@@ -21,7 +21,7 @@ function CreateStockLogPage({ appointmentId, item }) {
       reason: `medicine from appointment ID ${item.medicalRecordId}`,
       medicineId: item.medicineId,
     });
-  }, []);
+  }, [resetForm]);
   const {
     register,
     reset,

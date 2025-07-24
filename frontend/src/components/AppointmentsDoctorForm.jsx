@@ -1,12 +1,9 @@
 import { useNavigate } from "react-router";
 import defaultImage from "../assets/defaultImage.jpg";
+import formatDate from "../utils/formatDate";
 
 function AppointmentsDoctorForm({ el }) {
   const navi = useNavigate();
-  const localDate = new Date(el.date).toLocaleString("en-EN", {
-    dateStyle: "long",
-    timeZone: "Asia/Bangkok",
-  });
   const hdlClick = () => {
     navi(`/doctor/medical-records/${el.patientId}/${el.id}`);
   };
@@ -26,7 +23,7 @@ function AppointmentsDoctorForm({ el }) {
       <td className="text-center">
         {el.patient?.user?.firstName} {el.patient?.user?.lastName}
       </td>
-      <td className="text-center">{localDate}</td>
+      <td className="text-center">{formatDate(el.date)}</td>
       <td className="text-center">{el.time}</td>
       <td
         className={`badge absolute mt-7 mx-9 ${
@@ -36,7 +33,11 @@ function AppointmentsDoctorForm({ el }) {
         {el.status}
       </td>
       <td className="space-x-3 text-center w-80">
-        <button className="btn btn-dash" onClick={hdlClick}>
+        <button
+          className="btn btn-dash"
+          onClick={hdlClick}
+          disabled={el.status === "COMPLETED"}
+        >
           Get medical's history
         </button>
       </td>

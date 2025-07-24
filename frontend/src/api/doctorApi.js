@@ -1,33 +1,20 @@
-import axios from "axios";
-
-const doctorsApi = axios.create({
-  baseURL: "http://localhost:3026/api/appointments",
-});
-
-const medicalApi = axios.create({
-  baseURL: "http://localhost:3026/api/medical-records",
-});
-
-const precriptionApi = axios.create({
-  baseURL: "http://localhost:3026/api/prescriptions",
-});
-
-const bearerToken = (token) => ({
-  headers: { Authorization: `Bearer ${token}` },
-});
+import { authApi } from "./baseApi";
 
 const doctorToBackend = {
-  getAllAppointments: (token) => doctorsApi.get("/doctors", bearerToken(token)),
-  getAllMedicalRecords: (token) =>
-    medicalApi.get("/doctors", bearerToken(token)),
-  getMedicalRecordsByPatientId: (id, token) =>
-    medicalApi.get(`/patients/${id}`, bearerToken(token)),
-  createMedicalRecord: (body, token) =>
-    medicalApi.post("/", body, bearerToken(token)),
-  getAllPrescriptions: (token) =>
-    precriptionApi.get("/doctors", bearerToken(token)),
-  createPrescription: (body, token) =>
-    precriptionApi.post("/", body, bearerToken(token)),
+  getAllAppointments: (page, limit, name, status) =>
+    authApi.get(
+      `/appointments/doctors/?page=${page}&limit=${limit}&name=${name}&status=${status}`
+    ),
+  getAppointmentById: (id) => authApi.get(`/appointments/${id}`),
+  getAllMedicalRecords: (page, limit, name) =>
+    authApi.get(
+      `/medical-records/doctors/?page=${page}&limit=${limit}&name=${name}`
+    ),
+  getMedicalRecordsByPatientId: (id) =>
+    authApi.get(`/medical-records/patients/${id}`),
+  createMedicalRecord: (body) => authApi.post("/medical-records", body),
+  getAllPrescriptions: () => authApi.get("/prescriptions/doctors"),
+  createPrescription: (body) => authApi.post("/prescriptions", body),
 };
 
 export default doctorToBackend;

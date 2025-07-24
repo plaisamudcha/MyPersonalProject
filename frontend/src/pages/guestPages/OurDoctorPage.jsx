@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import useUserStore from "../../stores/useUserStore";
-import DoctorForm from "../../components/doctorForm";
+import DoctorForm from "../../components/DoctorForm";
 
 function OurDoctorPage() {
   const getPublicDoctor = useUserStore((state) => state.getPublicDoctor);
@@ -9,7 +9,7 @@ function OurDoctorPage() {
     getPublicDoctor();
   }, []);
   return (
-    <div className="w-screen mx-auto overflow-auto">
+    <div className="w-screen mx-auto flex-1 overflow-auto">
       <div className="min-h-screen bg-base-100 py-12 px-4">
         <div className="text-center mb-10">
           <h1 className="text-4xl font-bold text-neutral">Our Doctors</h1>

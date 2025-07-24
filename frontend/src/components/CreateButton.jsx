@@ -1,9 +1,9 @@
-function CreateButton({ head, modalID }) {
+function CreateButton({ head, setModal }) {
   return (
     <button
       className="absolute right-0 btn btn-active btn-lg"
       onClick={() => {
-        document.getElementById(modalID).showModal();
+        setModal(true);
       }}
     >
       {head}

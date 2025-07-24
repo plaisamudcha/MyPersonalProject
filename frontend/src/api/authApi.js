@@ -1,22 +1,13 @@
-import axios from "axios";
-
-const authApi = axios.create({
-  baseURL: "http://localhost:3026/api/auth",
-});
-
-const bearerToken = (token) => ({
-  headers: { Authorization: `Bearer ${token}` },
-});
+import { publicApi } from "./baseApi";
 
 const authToBackend = {
-  registerPatient: (body) => authApi.post("/register/patient", body),
-  registerDoctor: (body, token) =>
-    authApi.post("/register/doctor", body, bearerToken(token)),
-  login: (body) => authApi.post("/login", body),
-  forgotPassword: (body) => authApi.post("/forgot-password", body),
+  registerPatient: (body) => publicApi.post("/auth/register/patient", body),
+  registerDoctor: (body) => publicApi.post("/auth/register/doctor", body),
+  login: (body) => publicApi.post("/auth/login", body),
+  forgotPassword: (body) => publicApi.post("/auth/forgot-password", body),
   resetPassword: (body, resetToken) =>
-    authApi.post(`/reset-password/${resetToken}`, body),
-  getPublicDoctor: () => authApi.get("/publicDoctor"),
+    publicApi.post(`/auth/reset-password/${resetToken}`, body),
+  getPublicDoctor: () => publicApi.get("/auth/publicDoctor"),
 };
 
 export default authToBackend;

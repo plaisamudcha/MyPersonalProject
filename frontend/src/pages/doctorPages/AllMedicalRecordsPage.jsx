@@ -2,33 +2,28 @@ import { useEffect, useState } from "react";
 import useMedicalRecordStore from "../../stores/useMedicalRecordStore";
 import SearchTextForm from "../../components/SearchForm";
 import MedicalDoctorForm from "../../components/MedicalDoctorForm";
+import PageButton from "../../components/PageButton";
 
 function AllMedicalRecordPage() {
   const [patientSearch, setPatientSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const limit = 5;
+  const totalData = useMedicalRecordStore((state) => state.totalData);
+  const totalPage = Math.ceil(totalData / limit);
   const medicalRecords = useMedicalRecordStore(
     (state) => state.medicalRecords ?? []
   );
   const getAllMedicalRecords = useMedicalRecordStore(
     (state) => state.getAllMedicalRecords
   );
-  const [filteredMedicalRecords, setFilteredMedicalRecords] = useState([]);
   useEffect(() => {
-    getAllMedicalRecords();
-  }, []);
-  useEffect(() => {
-    const result = medicalRecords.filter((el) => {
-      const patientName =
-        `${el.medicalRecord?.patient?.firstName} ${el.medicalRecord?.patient?.lastName}`.toLowerCase();
-      const matchPatient = patientName.includes(patientSearch.toLowerCase());
-      return matchPatient;
-    });
-    setFilteredMedicalRecords(result);
-  }, [patientSearch, medicalRecords]);
+    getAllMedicalRecords(page, limit, patientSearch);
+  }, [page, patientSearch]);
   return (
     <div>
-      <div className="relative flex flex-col gap-7 overflow-auto">
+      <div className="relative flex flex-col gap-7">
         <h1 className="text-3xl font-bold text-center">
-          List of all medical-records : {filteredMedicalRecords.length}
+          List of all medical-records : {totalData}
         </h1>
         <div className="flex border p-2 rounded-xl shadow-md justify-around">
           <SearchTextForm
@@ -50,14 +45,14 @@ function AllMedicalRecordPage() {
               </tr>
             </thead>
             <tbody className="font-bold">
-              {filteredMedicalRecords.map((el) => (
+              {medicalRecords.map((el) => (
                 <MedicalDoctorForm key={el.id} el={el} />
               ))}
             </tbody>
           </table>
         </div>
+        <PageButton page={page} setPage={setPage} totalPage={totalPage} />
       </div>
-      {/* <pre>{JSON.stringify(medicalRecords, null, 2)}</pre> */}
     </div>
   );
 }

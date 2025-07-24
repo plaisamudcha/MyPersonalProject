@@ -35,7 +35,7 @@ function AdminLayout() {
                     ? "bg-blue-700 scale-105 rounded-lg"
                     : ""
                 }`}
-                onClick={() => setIsClick(el.name)}
+                // onClick={() => setIsClick(el.name)}
               >
                 {el?.name}
               </Link>

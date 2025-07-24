@@ -36,7 +36,7 @@ export default function LoginPage() {
   };
   return (
     <>
-      <div className="h-9/10 flex items-center justify-center bg-gray-50 pb-5">
+      <div className="flex flex-1 items-center justify-center bg-gray-50">
         <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-md">
           <h2 className="text-2xl font-bold text-center mb-6">
             Login to Hospital System

@@ -5,9 +5,6 @@ import AdminRounter from "./AdminRouter";
 import DoctorRouter from "./DoctorRouter";
 import PatientRouter from "./PatientRouter";
 import GuestRouter from "./GuestRouter";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-const queryClient = new QueryClient();
 
 function AppRouter() {
   const user = useUserStore((state) => state.user);
@@ -29,9 +26,7 @@ function AppRouter() {
         </div>
       }
     >
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={finalRouter} />
-      </QueryClientProvider>
+      <RouterProvider router={finalRouter} />
     </Suspense>
   );
 }

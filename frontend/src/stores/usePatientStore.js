@@ -1,25 +1,21 @@
 import { create } from "zustand";
-import useUserStore from "./useUserStore";
 import adminToBackend from "../api/adminApi";
 
 const usePatientStore = create((set, get) => ({
   patients: [],
-  getAllPatients: async () => {
-    const token = useUserStore.getState().accessToken;
-    const res = await adminToBackend.getAllPatients(token);
+  getAllPatients: async (name) => {
+    const res = await adminToBackend.getAllPatients(name);
     set({ patients: res.data.allPatients });
     return res;
   },
-  deletePatient: async (id) => {
-    const token = useUserStore.getState().accessToken;
-    const res = await adminToBackend.deletePatient(id, token);
-    get().getAllPatients();
+  deletePatient: async (id, name) => {
+    const res = await adminToBackend.deletePatient(id);
+    get().getAllPatients(name);
     return res;
   },
-  updatePatient: async (id, input) => {
-    const token = useUserStore.getState().accessToken;
-    const res = await adminToBackend.updatePatient(id, input, token);
-    get().getAllPatients();
+  updatePatient: async (id, input, name) => {
+    const res = await adminToBackend.updatePatient(id, input);
+    get().getAllPatients(name);
     return res;
   },
 }));

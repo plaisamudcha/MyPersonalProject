@@ -12,7 +12,7 @@ function GuestLayout() {
   return (
     <>
       <div className="h-screen flex flex-col">
-        <header className="flex items-center justify-between h-1/10 px-6 bg-primary/60">
+        <header className="flex items-center justify-between h-25 py-2 px-6 bg-primary/60">
           <div className="flex items-center space-x-2">
             <div className="avatar">
               <div className="w-12 rounded-full">

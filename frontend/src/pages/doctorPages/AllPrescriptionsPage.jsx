@@ -59,14 +59,13 @@ function AllPrescriptionsPage() {
               </tr>
             </thead>
             <tbody className="font-bold">
-              {filteredPrescriptions.map((el) => (
-                <PrescriptionForm key={el.id} el={el} />
+              {filteredPrescriptions.map((el, idx) => (
+                <PrescriptionForm key={idx} el={el} />
               ))}
             </tbody>
           </table>
         </div>
       </div>
-      {/* <pre>{JSON.stringify(prescriptions, null, 2)}</pre> */}
     </div>
   );
 }

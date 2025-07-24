@@ -27,6 +27,10 @@ const adminSchema = {
   }).noUnknown(),
   createAppointment: object({
     date: date()
+      .transform((value, orginalValue) => {
+        return orginalValue === "" ? null : value;
+      })
+      .nullable()
       .min(today, "Can't choose past time")
       .required("Date is required"),
     time: string()
@@ -36,19 +40,27 @@ const adminSchema = {
       )
       .required("Time is required"),
     doctorId: number()
-      .min(1, "Only positive number")
-      .integer("Only integer number")
-      .required("doctorId is required"),
+      .transform((value, orginalValue) => {
+        return orginalValue === "" ? null : value;
+      })
+      .nullable()
+      .required("Doctor's ID is required"),
     patientId: number()
-      .min(1, "Only positive number")
-      .integer("Only integer number")
-      .required("patientId is required"),
+      .transform((value, orginalValue) => {
+        return orginalValue === "" ? null : value;
+      })
+      .nullable()
+      .required("Patient's ID is required"),
   }).noUnknown(),
   createMedicine: object({
     name: string().required("name is required"),
     description: string().required("description is required"),
     pricePerUnit: number()
       .min(0, "Positive number")
+      .transform((value, orginalValue) => {
+        return orginalValue === "" ? null : value;
+      })
+      .nullable()
       .required("Price is required"),
     form: string().required("form is required"),
   }).noUnknown(),

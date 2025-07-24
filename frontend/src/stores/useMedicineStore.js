@@ -1,25 +1,25 @@
 import { create } from "zustand";
-import useUserStore from "./useUserStore";
 import adminToBackend from "../api/adminApi";
 
 const useMedicineStore = create((set, get) => ({
+  totalData: null,
   medicines: [],
-  getAllMedicines: async () => {
-    const token = useUserStore.getState().accessToken;
-    const res = await adminToBackend.getAllMedicines(token);
-    set({ medicines: res.data.medicines });
+  getAllMedicines: async (page, limit, name, form) => {
+    const res = await adminToBackend.getAllMedicines(page, limit, name, form);
+    set({
+      totalData: res.data.medicines.total,
+      medicines: res.data.medicines.medicines,
+    });
+    return res.data;
+  },
+  createMedicine: async (input, page, limit) => {
+    const res = await adminToBackend.createMedicine(input);
+    get().getAllMedicines(page, limit, "", "");
     return res;
   },
-  createMedicine: async (input) => {
-    const token = useUserStore.getState().accessToken;
-    const res = await adminToBackend.createMedicine(input, token);
-    get().getAllMedicines();
-    return res;
-  },
-  updateMedicine: async (id, input) => {
-    const token = useUserStore.getState().accessToken;
-    const res = await adminToBackend.updateMedicine(id, input, token);
-    get().getAllMedicines();
+  updateMedicine: async (id, input, page, limit) => {
+    const res = await adminToBackend.updateMedicine(id, input);
+    get().getAllMedicines(page, limit, "", "");
     return res;
   },
 }));

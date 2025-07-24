@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import usePrescriptionStore from "../../../stores/usePrescriptionStore";
 import { useNavigate, useParams } from "react-router";
 import defaultImage from "../../../assets/defaultImage.jpg";
@@ -6,8 +6,10 @@ import PaymentByAppointmentIdForm from "../../../components/PaymentByAppointment
 import CreateStockLogPage from "../StockLog/CreateStockLogPage";
 import useAppointmentStore from "../../../stores/useAppointmentStore";
 import { toast } from "react-toastify";
+import formatDate from "../../../utils/formatDate";
 
 function PrescriptionListPage() {
+  const [resetForm, setResetForm] = useState(false);
   const navi = useNavigate();
   const { appointmentId } = useParams();
   const prescriptions = usePrescriptionStore((state) => state.prescriptions);
@@ -17,14 +19,6 @@ function PrescriptionListPage() {
   const updateStatusAppointment = useAppointmentStore(
     (state) => state.updateStatusAppointment
   );
-  function formatDate(isoDate) {
-    const date = new Date(isoDate);
-    return date.toLocaleDateString("en-US", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    });
-  }
 
   useEffect(() => {
     getAllPrescriptionsByAdmin(appointmentId);
@@ -139,24 +133,34 @@ function PrescriptionListPage() {
               Go to Payment
             </button>
           ) : (
-            <button className="btn btn-accent" onClick={hdlAddPayment}>
+            <button
+              className="btn btn-accent"
+              onClick={hdlAddPayment}
+              disabled={prescriptions.medicalRecord?.prescription.length === 0}
+            >
               Add Payment
             </button>
           )}
           {prescriptions.medicalRecord?.prescription.findIndex(
             (item) => item.createStock === false
-          ) === -1 ? (
+          ) === -1 && prescriptions.medicalRecord?.prescription.length !== 0 ? (
             <button className="btn btn-info" onClick={hdlStatusAppointment}>
               Completed Appointment
             </button>
           ) : (
             " "
           )}
+          <button
+            className="btn btn-primary"
+            onClick={() => navi("/admin/appointments")}
+          >
+            Go to Appointment
+          </button>
         </div>
       </div>
       <dialog id={`payment-form`} className="modal" onClose={hdlClose}>
         <div className="modal-box rounded-lg">
-          <PaymentByAppointmentIdForm />
+          <PaymentByAppointmentIdForm resetForm={resetForm} />
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
               ✕
@@ -168,10 +172,15 @@ function PrescriptionListPage() {
         <dialog
           key={idx}
           id={`createStockLog-form${item.id}`}
+          onClose={hdlClose}
           className="modal"
         >
           <div className="modal-box rounded-lg">
-            <CreateStockLogPage appointmentId={appointmentId} item={item} />
+            <CreateStockLogPage
+              appointmentId={appointmentId}
+              item={item}
+              resetForm={resetForm}
+            />
             <form method="dialog">
               <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
                 ✕

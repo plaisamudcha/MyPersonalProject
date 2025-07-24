@@ -27,6 +27,9 @@ function PaymentByAppointmentIdPage() {
         data
       );
       toast.success(res.data.message);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (error) {
       const errMsg = error.response?.data?.error || error.message;
       toast.error(errMsg);

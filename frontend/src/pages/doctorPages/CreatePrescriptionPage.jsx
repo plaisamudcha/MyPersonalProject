@@ -6,13 +6,26 @@ import doctorSchema from "../../validation/adminValidate/doctorSchema";
 import InputForm from "../../components/InputForm";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import useMedicineStore from "../../stores/useMedicineStore";
+import InputOptionForm from "../../components/InputOptionForm";
 
-function CreatePrescriptionPage({ id, resetForm }) {
+function CreatePrescriptionPage({ el, resetForm }) {
   const navi = useNavigate();
   const [isAddPrescription, setIsAddprescription] = useState(false);
   const createPrescription = usePrescriptionStore(
     (state) => state.createPrescription
   );
+  const medicines = useMedicineStore((state) => state.medicines);
+  const getAllMedicines = useMedicineStore((state) => state.getAllMedicines);
+  const medicinesArr = medicines.map((item) => ({
+    id: item.id,
+    value: item.id,
+    name: item.name,
+    stock: item.stock,
+  }));
+  useEffect(() => {
+    getAllMedicines(1, 100, "", "");
+  }, []);
   useEffect(() => {
     reset();
   }, [resetForm]);
@@ -23,7 +36,7 @@ function CreatePrescriptionPage({ id, resetForm }) {
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(doctorSchema.createPrescription),
-    defaultValues: { medicalRecordId: id },
+    defaultValues: { medicalRecordId: el.id, medicineId: "" },
   });
   const onCreate = async (data) => {
     try {
@@ -49,17 +62,24 @@ function CreatePrescriptionPage({ id, resetForm }) {
         </h2>
         <form onSubmit={handleSubmit(onCreate)}>
           <fieldset className="space-y-3" disabled={isSubmitting}>
+            <InputOptionForm
+              label="Medicine ID"
+              name="medicineId"
+              register={register("medicineId")}
+              array={medicinesArr}
+              errors={errors}
+            />
             <InputForm
               type="number"
               name={"dosage"}
-              label={"dosage"}
+              label={"dosage (times/day)"}
               register={register("dosage")}
               errors={errors}
             />
             <InputForm
               type="number"
               name={"duration"}
-              label={"duration"}
+              label={"duration (day)"}
               register={register("duration")}
               errors={errors}
             />
@@ -68,13 +88,6 @@ function CreatePrescriptionPage({ id, resetForm }) {
               name={"medicalRecordId"}
               label={"medicalRecordId"}
               register={register("medicalRecordId")}
-              errors={errors}
-            />
-            <InputForm
-              type="number"
-              name={"medicineId"}
-              label={"medicineId"}
-              register={register("medicineId")}
               errors={errors}
             />
             {/* ปุ่มเพิ่มรายการยา */}
@@ -89,14 +102,15 @@ function CreatePrescriptionPage({ id, resetForm }) {
               )}
             </button>
 
-            {/* ปุ่มจบการเพิ่ม และอัปเดต appointment */}
             {isAddPrescription && (
               <button
                 type="button"
                 className="btn btn-success w-full mt-3"
                 onClick={async () => {
                   toast.success("Appointment completed");
-                  document.getElementById("createPrescription-form")?.close();
+                  document
+                    .getElementById(`createPrescription-form${el.id}`)
+                    ?.close();
                   navi("/doctor/prescriptions");
                 }}
               >

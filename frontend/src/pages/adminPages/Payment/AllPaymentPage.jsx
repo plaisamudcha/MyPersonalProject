@@ -2,29 +2,24 @@ import { useEffect, useState } from "react";
 import usePaymentStore from "../../../stores/usePaymentStore";
 import SearchTextForm from "../../../components/SearchForm";
 import PaymentForm from "./PaymentForm";
+import PageButton from "../../../components/PageButton";
 
 function AllPaymentPage() {
   const [patientSearch, setPatientSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const limit = 6;
+  const totalData = usePaymentStore((state) => state.totalData);
+  const totalPage = Math.ceil(totalData / limit);
   const payments = usePaymentStore((state) => state.payments);
   const getAllPayments = usePaymentStore((state) => state.getAllPayments);
-  const [filteredPayments, setFilteredPayments] = useState([]);
   useEffect(() => {
-    getAllPayments();
-  }, []);
-  useEffect(() => {
-    const result = payments.filter((el) => {
-      const patientName =
-        `${el.patient?.user?.firstName} ${el.patient?.user?.lastName}`.toLowerCase();
-      const matchPatient = patientName.includes(patientSearch.toLowerCase());
-      return matchPatient;
-    });
-    setFilteredPayments(result);
-  }, [payments, patientSearch]);
+    getAllPayments(page, limit, patientSearch);
+  }, [page, patientSearch]);
   return (
     <div>
-      <div className="relative flex flex-col gap-7 overflow-auto">
+      <div className="relative flex flex-col gap-7">
         <h1 className="text-3xl font-bold text-center my-5">
-          List of all payments : {filteredPayments.length}
+          List of all payments : {totalData}
         </h1>
       </div>
       <div className="flex border p-2 rounded-xl shadow-md justify-around">
@@ -47,13 +42,23 @@ function AllPaymentPage() {
             </tr>
           </thead>
           <tbody>
-            {filteredPayments.map((el) => (
-              <PaymentForm key={el.id} el={el} />
-            ))}
+            {payments.length !== 0 ? (
+              payments.map((el) => <PaymentForm key={el.id} el={el} />)
+            ) : (
+              <td colSpan={9} className="text-xl text-center text-gray-500">
+                Don't have information
+              </td>
+            )}
           </tbody>
         </table>
       </div>
-      {/* <pre>{JSON.stringify(payments, null, 2)}</pre> */}
+      <div className="flex justify-center">
+        {payments.length !== 0 ? (
+          <PageButton page={page} setPage={setPage} totalPage={totalPage} />
+        ) : (
+          ""
+        )}
+      </div>
     </div>
   );
 }

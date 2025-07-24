@@ -7,6 +7,7 @@ import AddPicture from "../../../components/AddPicture";
 import { toast } from "react-toastify";
 import useDoctorStore from "../../../stores/useDoctorStore";
 import adminSchema from "../../../validation/adminValidate/adminSchema";
+import InputOptionForm from "../../../components/InputOptionForm";
 
 const specialization = [
   { id: 1, value: "GENERAL_PRACTICE" },
@@ -28,7 +29,7 @@ const specialization = [
   { id: 17, value: "UROLOGY" },
 ];
 
-function EditDoctorPage({ resetForm, item, file, setFile }) {
+function EditDoctorPage({ resetForm, item, file, setFile, searchName }) {
   const [addPicture, setAddPicture] = useState(false);
   const updateDoctor = useDoctorStore((state) => state.updateDoctor);
   const initialData = {
@@ -60,10 +61,7 @@ function EditDoctorPage({ resetForm, item, file, setFile }) {
       if (file) {
         formData.append("profileImage", file);
       }
-      // for (let pair of formData.entries()) {
-      //   console.log(pair[0], pair[1]);
-      // }
-      const res = await updateDoctor(item.id, formData);
+      const res = await updateDoctor(item.id, formData, searchName);
       setFile("");
       await new Promise((rs) => setTimeout(rs, 1000));
       document.getElementById(`updateDoctor-form${item.id}`).close();
@@ -103,28 +101,13 @@ function EditDoctorPage({ resetForm, item, file, setFile }) {
                 register={register("email")}
                 errors={errors}
               />
-              <div>
-                <label className="block mb-1 font-medium">Specialization</label>
-                <select
-                  className="w-full border px-3 py-2 rounded-md input input-accent"
-                  {...register("specialization")}
-                >
-                  <option value="" disabled>
-                    Select
-                  </option>
-                  {specialization.map((el) => (
-                    <option key={el.id} value={el.value}>
-                      {el.value.slice(0, 1).toUpperCase() +
-                        el.value.slice(1).toLowerCase()}
-                    </option>
-                  ))}
-                </select>
-                {errors.specialization && (
-                  <p className="text-sm text-red-400">
-                    {errors.specialization?.message}
-                  </p>
-                )}
-              </div>
+              <InputOptionForm
+                label={"Specialization"}
+                name="specialization"
+                register={register("specialization")}
+                array={specialization}
+                errors={errors}
+              />
               {addPicture && <AddPicture file={file} setFile={setFile} />}
               <div className="flex justify-between border rounded-lg p-2 items-center cursor-pointer">
                 <p>add doctor's image</p>

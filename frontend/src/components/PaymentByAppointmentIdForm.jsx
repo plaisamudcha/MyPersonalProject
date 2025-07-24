@@ -14,7 +14,7 @@ const method = [
   { id: 4, value: "PROMPTPAY" },
 ];
 
-function PaymentByAppointmentIdForm() {
+function PaymentByAppointmentIdForm({ resetForm }) {
   const prescriptions = usePrescriptionStore((state) => state.prescriptions);
   const createPaymentByAppointmendId = usePaymentStore(
     (state) => state.createPaymentByAppointmendId
@@ -34,7 +34,7 @@ function PaymentByAppointmentIdForm() {
       appointmentId: prescriptions.id,
       paymentMethod: "",
     });
-  }, [prescriptions]);
+  }, [prescriptions, resetForm]);
 
   const {
     register,
@@ -53,7 +53,7 @@ function PaymentByAppointmentIdForm() {
   });
   const onCreate = async (data) => {
     try {
-      const res = await createPaymentByAppointmendId(data);
+      const res = await createPaymentByAppointmendId(data, 1, 100);
       document.getElementById(`payment-form`).close();
       toast.success(res.data.message);
       setTimeout(() => {

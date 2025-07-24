@@ -5,8 +5,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import doctorSchema from "../../validation/adminValidate/doctorSchema";
 import { toast } from "react-toastify";
 import InputForm from "../../components/InputForm";
+import { useNavigate } from "react-router";
 
 function CreateMedicalRecordPage({ id, resetForm }) {
+  const navi = useNavigate();
   const createMedicalRecord = useMedicalRecordStore(
     (state) => state.createMedicalRecord
   );
@@ -27,7 +29,7 @@ function CreateMedicalRecordPage({ id, resetForm }) {
     try {
       const res = await createMedicalRecord(data);
       document.getElementById("createMedicalRecord-form").close();
-      document.getElementById("createPrescription-form").showModal();
+      navi("/doctor/appointments");
       toast.success(res.data.message);
     } catch (error) {
       const errMsg = error.response?.data?.error || error.message;

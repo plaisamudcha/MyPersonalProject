@@ -1,37 +1,35 @@
 import { create } from "zustand";
-import useUserStore from "./useUserStore";
 import adminToBackend from "../api/adminApi";
 import patientToBackend from "../api/patientApi";
 
 const usePaymentStore = create((set, get) => ({
+  totalData: null,
   payments: [],
   paymentByAppointmentId: [],
   paymentByPatientId: [],
-  getAllPayments: async () => {
-    const token = useUserStore.getState().accessToken;
-    const res = await adminToBackend.getAllPayments(token);
-    set({ payments: res.data.payments });
+  getAllPayments: async (page, limit, name) => {
+    const res = await adminToBackend.getAllPayments(page, limit, name);
+    set({
+      totalData: res.data.payments.total,
+      payments: res.data.payments.payments,
+    });
   },
-  createPaymentByAppointmendId: async (input) => {
-    const token = useUserStore.getState().accessToken;
-    const res = await adminToBackend.createPayment(input, token);
-    get().getAllPayments();
+  createPaymentByAppointmendId: async (input, page, limit) => {
+    const res = await adminToBackend.createPayment(input);
+    get().getAllPayments(page, limit, "");
     return res;
   },
   getPaymentByAppointmentId: async (id) => {
-    const token = useUserStore.getState().accessToken;
-    const res = await adminToBackend.getPaymentByAppointmentId(id, token);
+    const res = await adminToBackend.getPaymentByAppointmentId(id);
     set({ paymentByAppointmentId: res.data.payments });
   },
   updatePaymentStatus: async (id, input) => {
-    const token = useUserStore.getState().accessToken;
-    const res = await adminToBackend.upDatePaymentStatus(id, input, token);
+    const res = await adminToBackend.upDatePaymentStatus(id, input);
     get().getPaymentByAppointmentId();
     return res;
   },
   getPaymentByPatientId: async () => {
-    const token = useUserStore.getState().accessToken;
-    const res = await patientToBackend.getPaymentByPatientId(token);
+    const res = await patientToBackend.getPaymentByPatientId();
     set({ paymentByPatientId: res.data.payments });
     return res;
   },

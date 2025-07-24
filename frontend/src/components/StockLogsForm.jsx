@@ -1,15 +1,12 @@
-function StockLogsForm({ el }) {
-  const localDate = new Date(el.changeAt).toLocaleString("en-EN", {
-    dateStyle: "long",
-    timeZone: "Asia/Bangkok",
-  });
+import formatDate from "../utils/formatDate";
 
+function StockLogsForm({ el }) {
   return (
     <tr>
       <td>{el.id}</td>
       <td>{el.change}</td>
       <td>{el.reason}</td>
-      <td>{localDate}</td>
+      <td>{formatDate(el.changeAt)}</td>
       <td>{el.medicine.name}</td>
       <td
         className={`badge ${

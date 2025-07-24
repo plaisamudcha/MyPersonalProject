@@ -1,41 +1,24 @@
 import { useNavigate } from "react-router";
 import useAppointmentStore from "../stores/useAppointmentStore";
 import { toast } from "react-toastify";
+import formatDate from "../utils/formatDate";
 
-function AppointmentsForm({ el }) {
+function AppointmentsForm({ el, setIsOpenEdit, page, limit }) {
   const navi = useNavigate();
   const updateStatusAppointment = useAppointmentStore(
     (state) => state.updateStatusAppointment
   );
-  const deleteAppointment = useAppointmentStore(
-    (state) => state.deleteAppointment
-  );
-  const hdlDelete = async () => {
-    try {
-      const text = prompt(`text "delete" to delete appointment`);
-      if (text !== "delete") return toast.info("Invalid text");
-      const res = await deleteAppointment(el.id);
-      toast.success(res.data.message);
-    } catch (error) {
-      const errMsg = error.response?.data?.message || error.message;
-      toast.error(errMsg);
-    }
-  };
   const hdlUpdate = async () => {
     try {
       const updateStatus = el.status === "SCHEDULED" ? "CANCELED" : "SCHEDULED";
       const data = { status: updateStatus };
-      const res = await updateStatusAppointment(el.id, data);
+      const res = await updateStatusAppointment(el.id, data, page, limit);
       toast.success(res.data.message);
     } catch (error) {
       const errMsg = error.response?.data?.message || error.message;
       toast.error(errMsg);
     }
   };
-  const localDate = new Date(el.date).toLocaleString("en-EN", {
-    dateStyle: "long",
-    timeZone: "Asia/Bangkok",
-  });
 
   return (
     <tr>
@@ -48,7 +31,7 @@ function AppointmentsForm({ el }) {
       <td className="text-center">
         {el.patient.firstName} {el.patient.lastName}
       </td>
-      <td className="text-center">{localDate}</td>
+      <td className="text-center">{formatDate(el.date)}</td>
       <td className="text-center">{el.time}</td>
       <td className="text-center">
         {el.status === "COMPLETED" ? (
@@ -73,11 +56,7 @@ function AppointmentsForm({ el }) {
           <button
             className="btn btn-info "
             disabled={el.status === "COMPLETED" || el.status === "CANCELED"}
-            onClick={() =>
-              document
-                .getElementById(`updateAppointment-form${el.id}`)
-                .showModal()
-            }
+            onClick={() => setIsOpenEdit(el.id)}
           >
             Edit
           </button>

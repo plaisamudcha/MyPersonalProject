@@ -3,17 +3,19 @@ import useUserStore from "./useUserStore";
 import adminToBackend from "../api/adminApi";
 
 const useStockLogStore = create((set, get) => ({
+  totalData: null,
   stockLogs: [],
-  getAllStockLogs: async () => {
-    const token = useUserStore.getState().accessToken;
-    const res = await adminToBackend.getAllStockLogs(token);
-    set({ stockLogs: res.data.stocks });
+  getAllStockLogs: async (page, limit, name) => {
+    const res = await adminToBackend.getAllStockLogs(page, limit, name);
+    set({
+      totalData: res.data.stocks.total,
+      stockLogs: res.data.stocks.stockLogs,
+    });
     return res;
   },
-  createStockLog: async (input) => {
-    const token = useUserStore.getState().accessToken;
-    const res = await adminToBackend.createStockLog(input, token);
-    get().getAllStockLogs();
+  createStockLog: async (input, page, limit) => {
+    const res = await adminToBackend.createStockLog(input);
+    get().getAllStockLogs(page, limit, "");
     return res;
   },
 }));

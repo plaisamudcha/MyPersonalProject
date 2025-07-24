@@ -2,7 +2,6 @@ import defaultImage from "../assets/defaultImage.jpg";
 
 function PrescriptionForm({ el }) {
   const prescriptions = el.medicalRecord?.prescriptions ?? [];
-  console.log(prescriptions);
   return (
     <tr>
       <td className="text-center">

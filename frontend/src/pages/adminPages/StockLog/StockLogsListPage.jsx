@@ -1,29 +1,24 @@
 import { useEffect, useState } from "react";
 import useStockLogStore from "../../../stores/useStockLogStore";
 import StockLogsForm from "../../../components/StockLogsForm";
-import CreateButton from "../../../components/CreateButton";
 import SearchTextForm from "../../../components/SearchForm";
+import PageButton from "../../../components/PageButton";
 
 function StockLogsListPage() {
   const [searchName, setSearchName] = useState("");
+  const [page, setPage] = useState(1);
+  const limit = 6;
+  const totalData = useStockLogStore((state) => state.totalData);
+  const totalPage = Math.ceil(totalData / limit);
   const stockLogs = useStockLogStore((state) => state.stockLogs);
   const getAllStockLogs = useStockLogStore((state) => state.getAllStockLogs);
   useEffect(() => {
-    getAllStockLogs();
-  }, []);
-  const [filteredStockLogs, setFilteredStockLogs] = useState([]);
-  useEffect(() => {
-    const result = stockLogs.filter((el) => {
-      const medicineName = `${el.medicine.name}`.toLowerCase();
-      const matchMedicine = medicineName.includes(searchName.toLowerCase());
-      return matchMedicine;
-    });
-    setFilteredStockLogs(result);
-  }, [searchName, stockLogs]);
+    getAllStockLogs(page, limit, searchName);
+  }, [page, searchName]);
   return (
     <div className="relative flex flex-col gap-7 overflow-auto">
       <h1 className="text-3xl font-bold text-center">
-        List of all stocklogs : {filteredStockLogs.length}
+        List of all stocklogs : {totalData}
       </h1>
       <div className="flex border p-2 rounded-xl shadow-md justify-around">
         <SearchTextForm
@@ -45,14 +40,21 @@ function StockLogsListPage() {
             </tr>
           </thead>
           <tbody>
-            {filteredStockLogs.map((el) => (
-              <StockLogsForm key={el.id} el={el} />
-            ))}
+            {stockLogs.length !== 0 ? (
+              stockLogs.map((el) => <StockLogsForm key={el.id} el={el} />)
+            ) : (
+              <td colSpan={9} className="text-xl text-center text-gray-500">
+                Don't have information
+              </td>
+            )}
           </tbody>
         </table>
       </div>
-
-      {/* <pre>{JSON.stringify(stockLogs, null, 2)}</pre> */}
+      {stockLogs.length !== 0 ? (
+        <PageButton page={page} setPage={setPage} totalPage={totalPage} />
+      ) : (
+        ""
+      )}
     </div>
   );
 }

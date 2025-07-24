@@ -5,16 +5,9 @@ import InputForm from "../../../components/InputForm";
 import { toast } from "react-toastify";
 import adminSchema from "../../../validation/adminValidate/adminSchema";
 import useMedicineStore from "../../../stores/useMedicineStore";
+import InputOptionForm from "../../../components/InputOptionForm";
 
-const forms = [
-  { id: 1, value: "TABLET" },
-  { id: 2, value: "SYRUP" },
-  { id: 3, value: "CAPSULE" },
-  { id: 4, value: "INJECTION" },
-  { id: 5, value: "CREAM" },
-];
-
-function EditMedicinePage({ resetForm, el }) {
+function EditMedicinePage({ resetForm, el, page, limit, form }) {
   const updateMedicine = useMedicineStore((state) => state.updateMedicine);
   const initialData = {
     name: el.name,
@@ -37,8 +30,7 @@ function EditMedicinePage({ resetForm, el }) {
   });
   const onUpdate = async (data) => {
     try {
-      console.log("data", data);
-      const res = await updateMedicine(el.id, data);
+      const res = await updateMedicine(el.id, data, page, limit);
       document.getElementById(`updateMedicine-form${el.id}`).close();
       toast.success(res.data.message);
     } catch (error) {
@@ -74,25 +66,13 @@ function EditMedicinePage({ resetForm, el }) {
                 register={register("pricePerUnit")}
                 errors={errors}
               />
-              <div>
-                <label className="block mb-1 font-medium">Medicine form</label>
-                <select
-                  className="w-full border px-3 py-2 rounded-md input input-accent"
-                  {...register("form")}
-                >
-                  <option value="" disabled>
-                    Select
-                  </option>
-                  {forms.map((el) => (
-                    <option key={el.id} value={el.value}>
-                      {el.value}
-                    </option>
-                  ))}
-                </select>
-                {errors.form && (
-                  <p className="text-sm text-red-400">{errors.form?.message}</p>
-                )}
-              </div>
+              <InputOptionForm
+                label="Medicine's form"
+                name="form"
+                register={register("form")}
+                array={form}
+                errors={errors}
+              />
               <button
                 type="submit"
                 className="w-full btn btn-accent rounded-lg"

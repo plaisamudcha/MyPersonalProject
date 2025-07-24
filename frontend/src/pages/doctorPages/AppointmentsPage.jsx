@@ -3,6 +3,7 @@ import useAppointmentStore from "../../stores/useAppointmentStore";
 import AppointmentsDoctorForm from "../../components/AppointmentsDoctorForm";
 import SearchTextForm from "../../components/SearchForm";
 import SearchSelectForm from "../../components/SearchSelectForm";
+import PageButton from "../../components/PageButton";
 
 const status = [
   { id: 0, value: "", name: "All" },
@@ -13,31 +14,24 @@ const status = [
 function AppointmentsPage() {
   const [patientSearch, setPatientSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [page, setPage] = useState(1);
+  const limit = 5;
+  const totalData = useAppointmentStore((state) => state.totalData);
+  const totalPage = Math.ceil(totalData / limit);
   const appointmentsByDoctorId = useAppointmentStore(
     (state) => state.appointmentsByDoctorId
   );
   const getAllAppointmentsByDoctor = useAppointmentStore(
     (state) => state.getAllAppointmentsByDoctor
   );
-  const [filteredAppointments, setFilteredAppointments] = useState([]);
   useEffect(() => {
-    getAllAppointmentsByDoctor();
-  }, []);
-  useEffect(() => {
-    const result = appointmentsByDoctorId.filter((el) => {
-      const patientName =
-        `${el.patient?.user?.firstName} ${el.patient?.user?.lastName}`.toLowerCase();
-      const matchPatient = patientName.includes(patientSearch.toLowerCase());
-      const matchStatus = statusFilter ? el.status === statusFilter : true;
-      return matchPatient && matchStatus;
-    });
-    setFilteredAppointments(result);
-  }, [patientSearch, statusFilter, appointmentsByDoctorId]);
+    getAllAppointmentsByDoctor(page, limit, patientSearch, statusFilter);
+  }, [page, patientSearch, statusFilter]);
   return (
     <>
-      <div className="relative flex flex-col gap-7 overflow-auto">
+      <div className="relative flex flex-col gap-7">
         <h1 className="text-3xl font-bold text-center">
-          List of all appointments : {filteredAppointments.length}
+          List of all appointments : {totalData}
         </h1>
         <div className="flex border p-2 rounded-xl shadow-md justify-around">
           <SearchTextForm
@@ -46,7 +40,7 @@ function AppointmentsPage() {
             setSearch={setPatientSearch}
           />
           <SearchSelectForm
-            head="Search by status"
+            head="Search by appointment's status"
             statusFilter={statusFilter}
             setStatusFilter={setStatusFilter}
             array={status}
@@ -66,14 +60,14 @@ function AppointmentsPage() {
               </tr>
             </thead>
             <tbody className="font-bold ">
-              {filteredAppointments.map((el) => (
+              {appointmentsByDoctorId.map((el) => (
                 <AppointmentsDoctorForm key={el.id} el={el} />
               ))}
             </tbody>
           </table>
         </div>
+        <PageButton page={page} setPage={setPage} totalPage={totalPage} />
       </div>
-      {/* <pre>{JSON.stringify(appointmentsByDoctorId, null, 2)}</pre> */}
     </>
   );
 }

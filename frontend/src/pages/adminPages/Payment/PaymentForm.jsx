@@ -1,10 +1,7 @@
 import defaultImage from "../../../assets/defaultImage.jpg";
+import formatDate from "../../../utils/formatDate";
 
 function PaymentForm({ el }) {
-  const localDate = new Date(el.paidAt).toLocaleString("en-EN", {
-    dateStyle: "long",
-    timeZone: "Asia/Bangkok",
-  });
   return (
     <tr>
       <td className="text-center">{el.id}</td>
@@ -21,7 +18,7 @@ function PaymentForm({ el }) {
       <td className="text-center">
         {el.patient?.user?.firstName} {el.patient?.user?.lastName}
       </td>
-      <td className="text-center">{localDate}</td>
+      <td className="text-center">{formatDate(el.paidAt)}</td>
       <td className="text-center">{el.paymentMethod}</td>
       <td className="text-center">
         <p

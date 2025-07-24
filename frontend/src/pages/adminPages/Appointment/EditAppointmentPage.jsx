@@ -5,34 +5,24 @@ import InputForm from "../../../components/InputForm";
 import { toast } from "react-toastify";
 import adminSchema from "../../../validation/adminValidate/adminSchema";
 import useAppointmentStore from "../../../stores/useAppointmentStore";
-import dayjs from "dayjs";
+import formatDate from "../../../utils/formatDate";
+import InputOptionForm from "../../../components/InputOptionForm";
 
-const time = [
-  { id: 1, value: "08:00" },
-  { id: 2, value: "08:30" },
-  { id: 3, value: "09:00" },
-  { id: 4, value: "09:30" },
-  { id: 5, value: "10:00" },
-  { id: 6, value: "10:30" },
-  { id: 7, value: "11:30" },
-  { id: 8, value: "12:00" },
-  { id: 9, value: "12:30" },
-  { id: 10, value: "13:00" },
-  { id: 11, value: "13:30" },
-  { id: 12, value: "14:00" },
-  { id: 13, value: "14:30" },
-  { id: 14, value: "15:00" },
-  { id: 15, value: "15:30" },
-  { id: 16, value: "16:00" },
-];
-
-function EditAppointmentPage({ resetForm, el }) {
+function EditAppointmentPage({
+  resetForm,
+  el,
+  page,
+  limit,
+  doctorArray,
+  patientArray,
+  time,
+}) {
   const updateAppointment = useAppointmentStore(
     (state) => state.updateAppointment
   );
   const initialData = {
-    date: dayjs(el.date).format("YYYY-MM-DD"),
-    time: "",
+    date: formatDate(el.date),
+    time: el.time,
     doctorId: el.doctor.id,
     patientId: el.patient.id,
   };
@@ -51,8 +41,7 @@ function EditAppointmentPage({ resetForm, el }) {
   });
   const onUpdate = async (data) => {
     try {
-      console.log("data", data);
-      const res = await updateAppointment(el.id, data);
+      const res = await updateAppointment(el.id, data, page, limit);
       document.getElementById(`updateAppointment-form${el.id}`).close();
       toast.success(res.data.message);
     } catch (error) {
@@ -73,45 +62,31 @@ function EditAppointmentPage({ resetForm, el }) {
               <InputForm
                 type="date"
                 name={"date"}
-                label={"date"}
+                label={"Date"}
                 register={register("date")}
                 errors={errors}
               />
-              <InputForm
-                type="number"
-                name={"doctorId"}
-                label={"doctorId"}
+              <InputOptionForm
+                label="Doctor ID : name"
+                name="doctorId"
                 register={register("doctorId")}
+                array={doctorArray}
                 errors={errors}
               />
-              <InputForm
-                type="number"
-                name={"patientId"}
-                label={"patientId"}
+              <InputOptionForm
+                label="Patient ID : name"
+                name="patientId"
                 register={register("patientId")}
+                array={patientArray}
                 errors={errors}
               />
-              <div>
-                <label className="block mb-1 font-medium">
-                  Time appointment
-                </label>
-                <select
-                  className="w-full border px-3 py-2 rounded-md input input-accent"
-                  {...register("time")}
-                >
-                  <option value="" disabled>
-                    Select
-                  </option>
-                  {time.map((el) => (
-                    <option key={el.id} value={el.value}>
-                      {el.value}
-                    </option>
-                  ))}
-                </select>
-                {errors.time && (
-                  <p className="text-sm text-red-400">{errors.time?.message}</p>
-                )}
-              </div>
+              <InputOptionForm
+                label="Time appointment"
+                name="time"
+                register={register("time")}
+                array={time}
+                errors={errors}
+              />
               <button
                 type="submit"
                 className="w-full btn btn-accent rounded-lg"

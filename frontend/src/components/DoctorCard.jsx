@@ -2,13 +2,13 @@ import defaultImage from "../assets/defaultImage.jpg";
 import useDoctorStore from "../stores/useDoctorStore";
 import { toast } from "react-toastify";
 
-function DoctorCard({ item }) {
+function DoctorCard({ item, setIsOpenEdit, searchName }) {
   const deleteDoctor = useDoctorStore((state) => state.deleteDoctor);
   const onDelete = async () => {
     try {
       const email = prompt("Put email to delete");
       if (email !== item.user.email) return toast.info("Invalid email");
-      const res = await deleteDoctor(item.id);
+      const res = await deleteDoctor(item.id, searchName);
       toast.success(res.data.message);
     } catch (error) {
       const errMsg = error.response?.data?.error || error.message;
@@ -38,11 +38,7 @@ function DoctorCard({ item }) {
           <div className="flex justify-end gap-3">
             <button
               className="btn btn-neutral"
-              onClick={() => {
-                document
-                  .getElementById(`updateDoctor-form${item.id}`)
-                  .showModal();
-              }}
+              onClick={() => setIsOpenEdit(item.id)}
             >
               Edit profile
             </button>

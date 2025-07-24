@@ -9,30 +9,64 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import useDoctorStore from "../../stores/useDoctorStore";
-import { useEffect } from "react";
-import usePatientStore from "../../stores/usePatientStore";
-import useAppointmentStore from "../../stores/useAppointmentStore";
-import useMedicineStore from "../../stores/useMedicineStore";
+import { useQuery } from "@tanstack/react-query";
+import {
+  fetchAppointments,
+  fetchDoctors,
+  fetchMedicine,
+  fetchPatients,
+} from "../../utils/query";
 
 function Dashboard() {
-  const doctors = useDoctorStore((state) => state.doctors);
-  const getAllDoctors = useDoctorStore((state) => state.getAllDoctors);
-  const patients = usePatientStore((state) => state.patients);
-  const getAllPatients = usePatientStore((state) => state.getAllPatients);
-  const appointments = useAppointmentStore((state) => state.appointments);
-  const getAllAppointments = useAppointmentStore(
-    (state) => state.getAllAppointments
-  );
-  const medicines = useMedicineStore((state) => state.medicines);
-  const getAllMedicines = useMedicineStore((state) => state.getAllMedicines);
-  // const fullMonth = date.toLocaleString("en-US", { month: "long" });
-  useEffect(() => {
-    getAllDoctors();
-    getAllPatients();
-    getAllAppointments();
-    getAllMedicines();
-  }, []);
+  // const { data: appointments = [] } = useQuery({
+  //   queryKey: ["Appointments"],
+  //   queryFn: () => fetchApppointments,
+  // });
+  // const { data: doctors = [] } = useQuery({
+  //   queryKey: ["Doctors"],
+  //   queryFn: () => fetchDoctors,
+  // });
+  // const { data: patients = [] } = useQuery({
+  //   queryKey: ["Patients"],
+  //   queryFn: () => fetchPatients,
+  // });
+  // const { data: medicines = [] } = useQuery({
+  //   queryKey: ["Medicines"],
+  //   queryFn: () => fetchMedicine,
+  // });
+  const queries = {
+    appointments: useQuery({
+      queryKey: ["Appointments"],
+      queryFn: () => fetchAppointments(1, 100, "", ""),
+      staleTime: 1000 * 60 * 2,
+    }),
+    doctors: useQuery({
+      queryKey: ["Doctors"],
+      queryFn: () => fetchDoctors(""),
+      staleTime: 1000 * 60 * 2,
+    }),
+    patients: useQuery({
+      queryKey: ["Patients"],
+      queryFn: () => fetchPatients(""),
+      staleTime: 1000 * 60 * 2,
+    }),
+    medicines: useQuery({
+      queryKey: ["Medicines"],
+      queryFn: () => fetchMedicine(1, 100, "", ""),
+      staleTime: 1000 * 60 * 2,
+    }),
+  };
+
+  // เช็ก loading/error ได้แบบนี้
+  if (Object.values(queries).some((q) => q.isLoading)) return <p>Loading...</p>;
+  if (Object.values(queries).some((q) => q.error)) return <p>Error!</p>;
+
+  const { appointments, doctors, patients, medicines } = {
+    appointments: queries.appointments.data ?? [],
+    doctors: queries.doctors.data ?? [],
+    patients: queries.patients.data ?? [],
+    medicines: queries.medicines.data ?? [],
+  };
   const metrics = [
     { label: "Doctors", value: doctors.length },
     { label: "Patients", value: patients.length },
@@ -64,15 +98,8 @@ function Dashboard() {
         return prev;
       }, {})
   ).sort((a, b) => monthOrder.indexOf(a.name) - monthOrder.indexOf(b.name));
-  // const lineData = [
-  //   { name: "Jan", value: 10 },
-  //   { name: "Feb", value: 20 },
-  //   { name: "Mar", value: 15 },
-  //   { name: "Apr", value: 25 },
-  //   { name: "May", value: 40 },
-  //   { name: "Jun", value: 38 },
-  //   { name: "Jul", value: 50 },
-  // ];
+
+  console.log(lineData);
   const barData = Object.values(
     medicines.reduce((prev, curr) => {
       const medName = curr.name || "Unknown";
@@ -83,15 +110,6 @@ function Dashboard() {
   )
     .sort((a, b) => b.value - a.value)
     .slice(0, 7);
-  console.log("barData", barData);
-  // const barData = [
-  //   { name: "Paracetamol", value: 50 },
-  //   { name: "Ibuprofen", value: 45 },
-  //   { name: "Amoxicillin", value: 35 },
-  //   { name: "Cough Syrup", value: 28 },
-  //   { name: "Vitamin C", value: 25 },
-  //   { name: "Aspirin", value: 20 },
-  // ];
   return (
     <div className="flex-1 p-8">
       {/* Metrics */}

@@ -1,76 +1,38 @@
-import axios from "axios";
-
-const doctorsApi = axios.create({
-  baseURL: "http://localhost:3026/api/doctors",
-});
-
-const patientApi = axios.create({
-  baseURL: "http://localhost:3026/api/patients",
-});
-
-const appointmentApi = axios.create({
-  baseURL: "http://localhost:3026/api/appointments",
-});
-
-const prescriptionApi = axios.create({
-  baseURL: "http://localhost:3026/api/prescriptions",
-});
-
-const medicineApi = axios.create({
-  baseURL: "http://localhost:3026/api/medicines",
-});
-
-const stockLogApi = axios.create({
-  baseURL: "http://localhost:3026/api/stock-logs",
-});
-
-const paymentApi = axios.create({
-  baseURL: "http://localhost:3026/api/payments",
-});
-
-const bearerToken = (token) => ({
-  headers: { Authorization: `Bearer ${token}` },
-});
+import { authApi } from "./baseApi";
 
 const adminToBackend = {
-  getAllDoctors: (token) => doctorsApi.get("/", bearerToken(token)),
-  deleteDoctor: (id, token) =>
-    doctorsApi.patch(`/${id}`, {}, bearerToken(token)),
-  updateDoctor: (id, body, token) =>
-    doctorsApi.put(`/${id}`, body, bearerToken(token)),
-  getAllPatients: (token) => patientApi.get("/", bearerToken(token)),
-  deletePatient: (id, token) =>
-    patientApi.patch(`/${id}`, {}, bearerToken(token)),
-  updatePatient: (id, body, token) =>
-    patientApi.put(`/${id}`, body, bearerToken(token)),
-  getAllAppointments: (token) => appointmentApi.get(`/`, bearerToken(token)),
-  createAppointment: (body, token) =>
-    appointmentApi.post("/", body, bearerToken(token)),
-  deleteAppointment: (id, token) =>
-    appointmentApi.delete(`/${id}`, bearerToken(token)),
-  updateStatusAppointment: (id, status, token) =>
-    appointmentApi.patch(`/${id}`, status, bearerToken(token)),
-  updateAppointment: (id, body, token) =>
-    appointmentApi.put(`/${id}`, body, bearerToken(token)),
-  getAllMedicines: (token) => medicineApi.get(`/`, bearerToken(token)),
-  createMedicine: (body, token) =>
-    medicineApi.post("/", body, bearerToken(token)),
-  updateMedicine: (id, body, token) =>
-    medicineApi.put(`/${id}`, body, bearerToken(token)),
-  getAllStockLogs: (token) => stockLogApi.get(`/`, bearerToken(token)),
-  createStockLog: (body, token) =>
-    stockLogApi.post("/", body, bearerToken(token)),
-  getAllPrescriptions: (id, token) =>
-    prescriptionApi.get(`/appointment/${id}`, bearerToken(token)),
-  createPayment: (input, token) =>
-    paymentApi.post("/", input, bearerToken(token)),
-  getAllPayments: (token) => paymentApi.get("/", bearerToken(token)),
-  getPaymentByAppointmentId: (id, token) =>
-    paymentApi.get(`/appointment/${id}`, bearerToken(token)),
-  upDatePaymentStatus: (id, input, token) =>
-    paymentApi.patch(`/${id}`, input, bearerToken(token)),
-  updatePrescriptionByid: (id, body, token) =>
-    prescriptionApi.patch(`${id}`, body, bearerToken(token)),
+  getAllDoctors: (name) => authApi.get(`/doctors/?name=${name}`),
+  deleteDoctor: (id) => authApi.patch(`/doctors/${id}`),
+  updateDoctor: (id, body) => authApi.put(`/doctors/${id}`, body),
+  getAllPatients: (name) => authApi.get(`/patients/?name=${name}`),
+  deletePatient: (id) => authApi.patch(`/patients/${id}`),
+  updatePatient: (id, body) => authApi.put(`/patients/${id}`, body),
+  getAllAppointments: (page, limit, docName, patName) =>
+    authApi.get(
+      `/appointments/?page=${page}&limit=${limit}&docName=${docName}&patName=${patName}`
+    ),
+  createAppointment: (body) => authApi.post("/appointments", body),
+  deleteAppointment: (id) => authApi.delete(`/appointments/${id}`),
+  updateStatusAppointment: (id, status) =>
+    authApi.patch(`/appointments/${id}`, status),
+  updateAppointment: (id, body) => authApi.put(`/appointments/${id}`, body),
+  getAllMedicines: (page, limit, name, form) =>
+    authApi.get(
+      `/medicines/?page=${page}&limit=${limit}&name=${name}&form=${form}`
+    ),
+  createMedicine: (body) => authApi.post("/medicines", body),
+  updateMedicine: (id, body) => authApi.put(`/medicines/${id}`, body),
+  getAllStockLogs: (page, limit, name) =>
+    authApi.get(`/stock-logs/?page=${page}&limit=${limit}&name=${name}`),
+  createStockLog: (body) => authApi.post("/stock-logs/", body),
+  getAllPrescriptions: (id) => authApi.get(`/prescriptions/appointment/${id}`),
+  updatePrescriptionByid: (id, body) =>
+    authApi.patch(`/prescriptions/${id}`, body),
+  createPayment: (input) => authApi.post("/payments", input),
+  getAllPayments: (page, limit, name) =>
+    authApi.get(`/payments/?page=${page}&limit=${limit}&name=${name}`),
+  getPaymentByAppointmentId: (id) => authApi.get(`/payments/appointment/${id}`),
+  upDatePaymentStatus: (id, input) => authApi.patch(`/payments/${id}`, input),
 };
 
 export default adminToBackend;

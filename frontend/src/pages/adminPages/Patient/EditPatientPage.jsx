@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import adminSchema from "../../../validation/adminValidate/adminSchema";
 import usePatientStore from "../../../stores/usePatientStore";
 
-function EditPatientPage({ resetForm, item, file, setFile }) {
+function EditPatientPage({ resetForm, item, file, setFile, searchName }) {
   const [addPicture, setAddPicture] = useState(false);
   const updatePatient = usePatientStore((state) => state.updatePatient);
   const initialData = {
@@ -40,13 +40,10 @@ function EditPatientPage({ resetForm, item, file, setFile }) {
       if (file) {
         formData.append("profileImage", file);
       }
-      // for (let pair of formData.entries()) {
-      //   console.log(pair[0], pair[1]);
-      // }
-      const res = await updatePatient(item.id, formData);
+      const res = await updatePatient(item.id, formData, searchName);
       await new Promise((rs) => setTimeout(rs, 1000));
       setFile("");
-      document.getElementById(`updatePatient-form${item.id}`).close();
+      document.getElementById(`updatePatient-form${item.id}`)?.close();
       toast.success(res.data.message);
     } catch (error) {
       const errMsg = error.response?.data?.error || error.message;
@@ -58,7 +55,7 @@ function EditPatientPage({ resetForm, item, file, setFile }) {
       <div className="flex-1 p-8">
         <div className="w-full max-w-lg bg-white p-5 rounded-xl shadow-md mx-auto">
           <h2 className="text-2xl font-bold text-center mb-3">
-            Update patient {item.id}
+            Update patient ID {item.id}
           </h2>
 
           <form onSubmit={handleSubmit(onUpdate)}>
