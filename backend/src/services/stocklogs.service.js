@@ -1,16 +1,32 @@
 import prisma from "../config/prisma.js";
 
 const stocksService = {
-  getAllStocks: async () => {
-    const result = await prisma.pharmacyStockLog.findMany({
-      include: {
-        medicine: {
-          select: { name: true, form: true },
+  getAllStocks: async (page, limit, name = "") => {
+    const [total, stockLogs] = await Promise.all([
+      prisma.pharmacyStockLog.count({
+        where: {
+          medicine: {
+            name: { contains: name },
+          },
         },
-      },
-      orderBy: { changeAt: "desc" },
-    });
-    return result.filter((el) => el.medicine !== null);
+      }),
+      prisma.pharmacyStockLog.findMany({
+        where: {
+          medicine: {
+            name: { contains: name },
+          },
+        },
+        include: {
+          medicine: {
+            select: { name: true, form: true },
+          },
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: { changeAt: "desc" },
+      }),
+    ]);
+    return { total, stockLogs: stockLogs.filter((el) => el.medicine !== null) };
   },
   getStocksByMedicineId: async (id) => {
     return await prisma.medicine.findUnique({

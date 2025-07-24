@@ -1,14 +1,41 @@
 import prisma from "../config/prisma.js";
 
 const paymentsService = {
-  getAllPayments: async () => {
-    return await prisma.payment.findMany({
-      include: {
-        patient: {
-          include: { user: { select: { firstName: true, lastName: true } } },
+  getAllPayments: async (page, limit, name = "") => {
+    const [total, payments] = await Promise.all([
+      prisma.payment.count({
+        where: {
+          patient: {
+            user: {
+              OR: [
+                { firstName: { contains: name } },
+                { lastName: { contains: name } },
+              ],
+            },
+          },
         },
-      },
-    });
+      }),
+      prisma.payment.findMany({
+        where: {
+          patient: {
+            user: {
+              OR: [
+                { firstName: { contains: name } },
+                { lastName: { contains: name } },
+              ],
+            },
+          },
+        },
+        include: {
+          patient: {
+            include: { user: { select: { firstName: true, lastName: true } } },
+          },
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+    ]);
+    return { total, payments };
   },
   getPaymentById: async (id) => {
     return await prisma.payment.findUnique({ where: { id: Number(id) } });

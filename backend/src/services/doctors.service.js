@@ -1,9 +1,21 @@
 import prisma from "../config/prisma.js";
 
 const doctorsService = {
-  getAllDoctors: async () => {
+  getAllDoctors: async (name = "") => {
     return await prisma.doctor.findMany({
-      where: { deletedAt: null },
+      where: {
+        AND: [
+          { deletedAt: null },
+          {
+            user: {
+              OR: [
+                { firstName: { contains: name } },
+                { lastName: { contains: name } },
+              ],
+            },
+          },
+        ],
+      },
       omit: { userId: true },
       include: {
         user: { omit: { password: true } },

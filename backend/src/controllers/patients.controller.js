@@ -7,7 +7,8 @@ import fs from "fs/promises";
 const patientsController = {
   getAllPatient: async (req, res, next) => {
     try {
-      const allPatients = await patientsService.getAllPatients();
+      const { name } = req.query;
+      const allPatients = await patientsService.getAllPatients(name);
       res.json({ allPatients });
     } catch (error) {
       next(error);

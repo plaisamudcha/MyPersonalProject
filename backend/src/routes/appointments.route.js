@@ -31,7 +31,7 @@ appointmentsRoute.get(
 );
 appointmentsRoute.get(
   "/:id",
-  authMiddleware.isRole("ADMIN"),
+  authMiddleware.isRole(["ADMIN", "DOCTOR"]),
   appointmentsController.getAppointmentById
 );
 appointmentsRoute.delete(

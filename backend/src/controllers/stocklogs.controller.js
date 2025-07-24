@@ -5,7 +5,12 @@ import createError from "../utils/create-error.util.js";
 const stocksController = {
   getAllStocks: async (req, res, next) => {
     try {
-      const stocks = await stocksService.getAllStocks();
+      const { page, limit, name } = req.query;
+      const stocks = await stocksService.getAllStocks(
+        Number(page),
+        Number(limit),
+        name
+      );
       res.json({ stocks });
     } catch (error) {
       next(error);

@@ -6,7 +6,13 @@ import createError from "../utils/create-error.util.js";
 const appointmentsController = {
   getAllAppointments: async (req, res, next) => {
     try {
-      const allAppointments = await appointmentsService.getAllAppointments();
+      const { page, limit, docName, patName } = req.query;
+      const allAppointments = await appointmentsService.getAllAppointments(
+        Number(page),
+        Number(limit),
+        docName,
+        patName
+      );
       res.json({ allAppointments });
     } catch (error) {
       next(error);
@@ -24,12 +30,15 @@ const appointmentsController = {
   },
   getAppointmentByDoctorId: async (req, res, next) => {
     try {
-      console.log("req.user.id", req.user.id);
+      const { page, limit, name, status } = req.query;
       const appointments = await appointmentsService.getAppointmentByDoctorId(
-        req.user.id
+        req.user.id,
+        Number(page),
+        Number(limit),
+        name,
+        status
       );
       if (!appointments) createError(400, "Doctor not found!!!");
-      console.log(appointments);
       res.json({ appointments });
     } catch (error) {
       next(error);
@@ -53,6 +62,12 @@ const appointmentsController = {
       if (!doctor) createError(400, "doctorId not found");
       const patient = await patientsService.getPatientById(patientId);
       if (!patient) createError(400, "patientId not found");
+      const exist = await appointmentsService.findAppointmentDateTime(
+        date,
+        time,
+        doctorId
+      );
+      if (exist) createError(400, "This time has appointment already");
       await appointmentsService.createAppointment(
         date,
         time,
@@ -87,6 +102,12 @@ const appointmentsController = {
       if (!doctor) createError(400, "doctorId not found");
       const patient = await patientsService.getPatientById(patientId);
       if (!patient) createError(400, "patientId not found");
+      const exist = await appointmentsService.findAppointmentDateTime(
+        date,
+        time,
+        doctorId
+      );
+      if (exist) createError(400, "This time has appoitment already");
       await appointmentsService.updateAppointmentById(
         id,
         date,

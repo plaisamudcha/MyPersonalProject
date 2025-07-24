@@ -1,49 +1,92 @@
 import prisma from "../config/prisma.js";
 
 const appointmentsService = {
-  getAllAppointments: async () => {
-    const result = await prisma.appointment.findMany({
-      omit: { doctorId: true, patientId: true, updatedAt: true },
-      orderBy: { date: "desc" },
-      include: {
-        doctor: {
-          omit: { userId: true, profileImage: true, deletedAt: true },
-          include: {
+  getAllAppointments: async (page, limit, docName = "", patName = "") => {
+    const [total, appointments] = await Promise.all([
+      prisma.appointment.count({
+        where: {
+          doctor: {
             user: {
-              omit: {
-                id: true,
-                password: true,
-                role: true,
-                createdAt: true,
-                email: true,
+              OR: [
+                { firstName: { contains: docName } },
+                { lastName: { contains: docName } },
+              ],
+            },
+          },
+          patient: {
+            user: {
+              OR: [
+                { firstName: { contains: patName } },
+                { lastName: { contains: patName } },
+              ],
+            },
+          },
+        },
+      }),
+      prisma.appointment.findMany({
+        where: {
+          doctor: {
+            user: {
+              OR: [
+                { firstName: { contains: docName } },
+                { lastName: { contains: docName } },
+              ],
+            },
+          },
+          patient: {
+            user: {
+              OR: [
+                { firstName: { contains: patName } },
+                { lastName: { contains: patName } },
+              ],
+            },
+          },
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+        omit: { doctorId: true, patientId: true, updatedAt: true },
+        orderBy: { date: "desc" },
+        include: {
+          doctor: {
+            omit: { userId: true, profileImage: true, deletedAt: true },
+            include: {
+              user: {
+                omit: {
+                  id: true,
+                  password: true,
+                  role: true,
+                  createdAt: true,
+                  email: true,
+                },
+              },
+            },
+          },
+          patient: {
+            omit: {
+              userId: true,
+              deletedAt: true,
+              dob: true,
+              gender: true,
+              phone: true,
+              profileImage: true,
+            },
+            include: {
+              user: {
+                omit: {
+                  id: true,
+                  email: true,
+                  password: true,
+                  role: true,
+                  createdAt: true,
+                },
               },
             },
           },
         },
-        patient: {
-          omit: {
-            userId: true,
-            deletedAt: true,
-            dob: true,
-            gender: true,
-            phone: true,
-            profileImage: true,
-          },
-          include: {
-            user: {
-              omit: {
-                id: true,
-                email: true,
-                password: true,
-                role: true,
-                createdAt: true,
-              },
-            },
-          },
-        },
-      },
-    });
-    return result.reduce((prev, curr) => {
+      }),
+    ]);
+
+    const data = appointments.reduce((prev, curr) => {
       let newObj = {
         id: curr.id,
         date: curr.date,
@@ -64,38 +107,77 @@ const appointmentsService = {
       prev.push(newObj);
       return prev;
     }, []);
+    return {
+      total,
+      data,
+    };
   },
   getAppointmentById: async (id) => {
     return await prisma.appointment.findUnique({
       where: { id: Number(id) },
+      include: { medicalRecord: true },
     });
   },
-  getAppointmentByDoctorId: async (id) => {
-    const result = await prisma.user.findUnique({
-      where: { id: Number(id) },
-      omit: { password: true, createdAt: true },
-      include: {
-        doctor: {
-          include: {
-            appointments: {
-              where: { OR: [{ status: "COMPLETED" }, { status: "SCHEDULED" }] },
-              omit: { doctorId: true },
-              include: {
-                patient: {
-                  omit: { id: true, userId: true, deletedAt: true },
-                  include: {
-                    user: { select: { firstName: true, lastName: true } },
-                  },
+  getAppointmentByDoctorId: async (
+    id,
+    page,
+    limit,
+    patName = "",
+    status = ""
+  ) => {
+    const statusForms = ["SCHEDULED", "COMPLETED", "CANCELED"];
+    const [total, appointments] = await Promise.all([
+      prisma.appointment.count({
+        where: {
+          AND: [
+            { doctor: { user: { id: Number(id) } } },
+            {
+              patient: {
+                user: {
+                  OR: [
+                    { firstName: { contains: patName } },
+                    { lastName: { contains: patName } },
+                  ],
                 },
               },
-              orderBy: { date: "desc" },
             },
-          },
-          omit: { userId: true },
+            ...(statusForms.includes(status)
+              ? [{ status: { equals: status } }]
+              : []),
+          ],
         },
-      },
-    });
-    return result.doctor.appointments;
+      }),
+      prisma.appointment.findMany({
+        where: {
+          AND: [
+            { doctor: { user: { id: Number(id) } } },
+            {
+              patient: {
+                user: {
+                  OR: [
+                    { firstName: { contains: patName } },
+                    { lastName: { contains: patName } },
+                  ],
+                },
+              },
+            },
+            ...(statusForms.includes(status)
+              ? [{ status: { equals: status } }]
+              : []),
+          ],
+        },
+        include: {
+          patient: {
+            include: { user: { select: { firstName: true, lastName: true } } },
+          },
+          medicalRecord: true,
+        },
+        orderBy: { date: "desc" },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+    ]);
+    return { total, appointments };
   },
   getAppointmentByPatientId: async (id) => {
     const result = await prisma.patient.findUnique({
@@ -136,6 +218,11 @@ const appointmentsService = {
     return await prisma.appointment.update({
       where: { id: Number(id) },
       data: { status },
+    });
+  },
+  findAppointmentDateTime: async (date, time, doctorId) => {
+    return await prisma.appointment.findFirst({
+      where: { date, time, doctorId },
     });
   },
 };

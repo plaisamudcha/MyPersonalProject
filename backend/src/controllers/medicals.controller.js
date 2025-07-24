@@ -46,10 +46,13 @@ const medicalsController = {
     }
   },
   getMedicalRecordByDoctorId: async (req, res, next) => {
-    console.log("req.user.id", req.user.id);
     try {
+      const { page, limit, name } = req.query;
       const medicalRecords = await medicalsService.getMedicalRecordByDoctorId(
-        req.user.id
+        req.user.id,
+        Number(page),
+        Number(limit),
+        name
       );
       res.json({ medicalRecords });
     } catch (error) {

@@ -61,10 +61,11 @@ const authController = {
         role: foundUser.role,
       };
       const accessToken = genTokenJWT.loginToken(payload);
+      const { password: hashPassword, ...user } = foundUser;
       res.json({
         message: `Login success, Welcome back ${foundUser.firstName} ${foundUser.lastName}`,
         accessToken,
-        user: foundUser,
+        user,
       });
     } catch (error) {
       next(error);

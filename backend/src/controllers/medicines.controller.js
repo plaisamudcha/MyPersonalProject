@@ -4,7 +4,13 @@ import createError from "../utils/create-error.util.js";
 const medicinesController = {
   getAllMedicines: async (req, res, next) => {
     try {
-      const medicines = await medicinesService.getAllMedicines();
+      const { page, limit, name, form } = req.query;
+      const medicines = await medicinesService.getAllMedicines(
+        Number(page),
+        Number(limit),
+        name,
+        form
+      );
       res.json({ medicines });
     } catch (error) {
       next(error);
@@ -23,6 +29,16 @@ const medicinesController = {
   createMedicine: async (req, res, next) => {
     try {
       const { name, description, pricePerUnit, form } = req.body;
+      const existMedicine = await medicinesService.findExistmedicine(
+        name,
+        form
+      );
+      console.log(existMedicine);
+      if (existMedicine)
+        createError(
+          400,
+          "This medicine's name and medicine's form has already"
+        );
       await medicinesService.createMedicine(
         name,
         description,
@@ -37,9 +53,19 @@ const medicinesController = {
   updateMedicineById: async (req, res, next) => {
     try {
       const { id } = req.params;
-      const { name, description, stock, pricePerUnit, form } = req.body;
+      const { name, description, pricePerUnit, form } = req.body;
       const medicine = await medicinesService.getMedicineById(id);
       if (!medicine) createError(400, "Medicine not found!!!");
+      const existMedicine = await medicinesService.findExistmedicine(
+        name,
+        form
+      );
+      if (existMedicine)
+        createError(
+          400,
+          "This medicine's name and medicine's form has already"
+        );
+
       await medicinesService.updateMedicineById(
         id,
         name,

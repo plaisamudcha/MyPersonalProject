@@ -19,83 +19,90 @@ const medicalsService = {
       where: { appointmentId: Number(id) },
     });
   },
-  getMedicalRecordByDoctorId: async (id) => {
-    const result = await prisma.user.findUnique({
-      where: { id: Number(id) },
-      omit: { password: true, createdAt: true },
-      include: {
-        doctor: {
-          include: {
-            appointments: {
-              include: {
-                medicalRecord: true,
+  getMedicalRecordByDoctorId: async (id, page, limit, name = "") => {
+    const [total, medicalRecords] = await Promise.all([
+      prisma.medicalRecord.count({
+        where: {
+          AND: [
+            { appointment: { doctor: { user: { id: Number(id) } } } },
+            {
+              appointment: {
                 patient: {
-                  omit: { id: true, userId: true, deletedAt: true },
-                  include: {
-                    user: { select: { firstName: true, lastName: true } },
+                  user: {
+                    OR: [
+                      { firstName: { contains: name } },
+                      { lastName: { contains: name } },
+                    ],
                   },
                 },
               },
-              orderBy: { date: "desc" },
+            },
+          ],
+        },
+      }),
+      prisma.medicalRecord.findMany({
+        where: {
+          AND: [
+            { appointment: { doctor: { user: { id: Number(id) } } } },
+            {
+              appointment: {
+                patient: {
+                  user: {
+                    OR: [
+                      { firstName: { contains: name } },
+                      { lastName: { contains: name } },
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+        },
+        include: {
+          appointment: {
+            include: {
+              patient: {
+                include: {
+                  user: { select: { firstName: true, lastName: true } },
+                },
+              },
             },
           },
         },
-      },
-    });
-    return result.doctor.appointments.map((item) => ({
-      medicalRecord: {
-        id: item.medicalRecord?.id || "-",
-        diagnosis: item.medicalRecord?.diagnosis || "-",
-        notes: item.medicalRecord?.notes || "-",
-        createdAt: item.medicalRecord?.createdAt || "-",
-        patient: {
-          dob: item.patient.dob,
-          gender: item.patient.gender,
-          phone: item.patient.phone,
-          profileImage: item.patient.profileImage,
-          firstName: item.patient.user.firstName,
-          lastName: item.patient.user.lastName,
-        },
-      },
-    }));
+        orderBy: { id: "desc" },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+    ]);
+    return { total, medicalRecords };
   },
   getMedicalRecordByPatientId: async (id, patientId) => {
-    const result = await prisma.user.findUnique({
-      where: { id: Number(id) },
-      omit: { password: true, createdAt: true },
+    const result = await prisma.medicalRecord.findMany({
+      where: {
+        AND: [
+          { appointment: { doctor: { userId: Number(id) } } },
+          { appointment: { patientId: Number(patientId) } },
+        ],
+      },
       include: {
-        doctor: {
+        appointment: {
           include: {
-            appointments: {
-              where: { patientId: Number(patientId) },
+            patient: {
               include: {
-                medicalRecord: { include: { prescription: true } },
-                patient: {
-                  omit: { userId: true, deletedAt: true },
-                  include: {
-                    user: { select: { firstName: true, lastName: true } },
-                  },
-                },
+                user: { select: { firstName: true, lastName: true } },
               },
             },
           },
         },
+        prescription: true,
       },
     });
-    return result.doctor.appointments.reduce((prev, curr, index) => {
-      if (index === 0) {
-        prev["id"] = curr.patient.id;
-        prev["dob"] = curr.patient.dob;
-        prev["gender"] = curr.patient.gender;
-        prev["phone"] = curr.patient.phone;
-        prev["profileImage"] = curr.patient.profileImage;
-        prev["firstName"] = curr.patient.user.firstName;
-        prev["lastName"] = curr.patient.user.lastName;
+    return result.reduce((prev, curr, idx) => {
+      if (idx === 0) {
+        prev["patient"] = curr.appointment.patient;
         prev["medicalRecord"] = [];
       }
-      if (curr.medicalRecord) {
-        prev["medicalRecord"].push(curr.medicalRecord);
-      }
+      prev["medicalRecord"].push(curr);
       return prev;
     }, {});
   },

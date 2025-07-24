@@ -6,7 +6,12 @@ import createError from "../utils/create-error.util.js";
 const paymentsController = {
   getAllPayments: async (req, res, next) => {
     try {
-      const payments = await paymentsService.getAllPayments();
+      const { page, limit, name } = req.query;
+      const payments = await paymentsService.getAllPayments(
+        Number(page),
+        Number(limit),
+        name
+      );
       res.json({ payments });
     } catch (error) {
       next(error);

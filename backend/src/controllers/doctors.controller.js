@@ -7,7 +7,8 @@ import path from "path";
 const doctorsController = {
   getAllDoctors: async (req, res, next) => {
     try {
-      const allDoctors = await doctorsService.getAllDoctors();
+      const { name } = req.query;
+      const allDoctors = await doctorsService.getAllDoctors(name);
       res.json({ allDoctors });
     } catch (error) {
       next(error);
