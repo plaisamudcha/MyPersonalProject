@@ -18,7 +18,7 @@ spec:
         - name: backend-container # ชื่อของ Container ภายใน Pod
           image: my-backend-app # ชื่อ Docker Image ที่เราสร้างไว้ใน Step 2
           imagePullPolicy:
-            Never # บอก Kubernetes ว่าไม่ต้องพยายามดึง Image จาก Docker Hub
+            IfNotPresent # บอก Kubernetes ว่าไม่ต้องพยายามดึง Image จาก Docker Hub
             # เพราะเราสร้าง Image ไว้ในเครื่องเราแล้ว (ใช้ได้กับ Minikube)
           ports:
             - containerPort: 3026 # Port ที่ Backend ของเรารันอยู่ภายใน Container

@@ -1,0 +1,16 @@
+gitlabUrl: https://gitlab.com
+runnerRegistrationToken: glrt-Bztj9dg-OPF6UwDwk9-EYW86MQpwOjE2dXliNAp0OjMKdTpoZDBodhg.01.1j0v033w4
+rbac:
+  create: true
+runners:
+  privileged: true
+  builds:
+    cpuRequest: 200m
+    cpuLimit: 1
+    memoryRequest: 256Mi
+    memoryLimit: 512Mi
+  config: |
+    [[runners]]
+      [runners.kubernetes]
+        namespace = "default"
+        pull_policy = ["if-not-present", "always"]

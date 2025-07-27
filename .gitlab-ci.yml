@@ -1,0 +1,108 @@
+stages:
+  - build
+  - scan
+  - deploy
+
+variables:
+  # Kaniko จะใช้ path นี้เป็นที่เก็บ docker config สำหรับ login
+  DOCKER_CONFIG: /kaniko/.docker/
+
+# Job สำหรับ Build Backend Image ด้วย Kaniko
+build_backend:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    entrypoint: [""]
+  before_script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+  script:
+    - cd backend
+    - /kaniko/executor --context . --dockerfile Dockerfile --destination registry.gitlab.com/$CI_PROJECT_PATH/my-backend-app:$CI_COMMIT_SHORT_SHA --destination registry.gitlab.com/$CI_PROJECT_PATH/my-backend-app:latest
+  tags:
+    - kubernetes
+  only:
+    - main
+
+# Job สำหรับ Build Frontend Image ด้วย Kaniko
+build_frontend:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    entrypoint: [""]
+  before_script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+  script:
+    - cd frontend
+    - /kaniko/executor --context . --dockerfile Dockerfile --destination registry.gitlab.com/$CI_PROJECT_PATH/my-frontend-app:$CI_COMMIT_SHORT_SHA --destination registry.gitlab.com/$CI_PROJECT_PATH/my-frontend-app:latest
+  tags:
+    - kubernetes
+  only:
+    - main
+
+# Job สำหรับ Scan Backend Image ด้วย Trivy
+scan_backend_image:
+  stage: scan
+  image: aquasec/trivy:0.48.0
+  variables:
+    TRIVY_USERNAME: $CI_REGISTRY_USER
+    TRIVY_PASSWORD: $CI_REGISTRY_PASSWORD
+  script:
+    - trivy image --username $TRIVY_USERNAME --password $TRIVY_PASSWORD registry.gitlab.com/$CI_PROJECT_PATH/my-backend-app:$CI_COMMIT_SHORT_SHA
+  tags:
+    - kubernetes
+  only:
+    - main
+
+# Job สำหรับ Scan Frontend Image ด้วย Trivy
+scan_frontend_image:
+  stage: scan
+  image: aquasec/trivy:0.48.0
+  variables:
+    TRIVY_USERNAME: $CI_REGISTRY_USER
+    TRIVY_PASSWORD: $CI_REGISTRY_PASSWORD
+  script:
+    - trivy image --username $TRIVY_USERNAME --password $TRIVY_PASSWORD registry.gitlab.com/$CI_PROJECT_PATH/my-frontend-app:$CI_COMMIT_SHORT_SHA
+  tags:
+    - kubernetes
+  only:
+    - main
+
+# Job สำหรับ Deploy Backend ไปยัง Kubernetes
+deploy_backend:
+  stage: deploy
+  image: bitnami/kubectl:1.29.1
+  script:
+    - export KUBECONFIG=/root/.kube/config
+    - kubectl config set-cluster kubernetes --server=$(minikube ip):8443 --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt --embed-certs=true
+    - kubectl config set-credentials minikube --token=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+    - kubectl config set-context minikube --cluster kubernetes --user minikube
+    - kubectl config use-context minikube
+    - 'sed -i "s|image: my-backend-app|image: registry.gitlab.com/$CI_PROJECT_PATH/my-backend-app:$CI_COMMIT_SHORT_SHA|g" backend/backend-deployment.yaml'
+    - kubectl apply -f backend/backend-deployment.yaml
+    - kubectl apply -f backend/backend-service.yaml
+    - kubectl rollout status deployment/backend-app-deployment
+  tags:
+    - kubernetes
+  only:
+    - main
+
+# Job สำหรับ Deploy Frontend ไปยัง Kubernetes
+deploy_frontend:
+  stage: deploy
+  image: bitnami/kubectl:1.29.1
+  script:
+    - export KUBECONFIG=/root/.kube/config
+    - kubectl config set-cluster kubernetes --server=$(minikube ip):8443 --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt --embed-certs=true
+    - kubectl config set-credentials minikube --token=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+    - kubectl config set-context minikube --cluster kubernetes --user minikube
+    - kubectl config use-context minikube
+    - 'sed -i "s|image: my-frontend-app|image: registry.gitlab.com/$CI_PROJECT_PATH/my-frontend-app:$CI_COMMIT_SHORT_SHA|g" frontend/frontend-deployment.yaml'
+    - kubectl apply -f frontend/frontend-deployment.yaml
+    - kubectl apply -f frontend/frontend-service.yaml
+    - kubectl rollout status deployment/frontend-app-deployment
+  tags:
+    - kubernetes
+  only:
+    - main
