@@ -15,15 +15,19 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 const app = express();
+
+app.get("/db-test", async (req, res) => {
+  try {
+    res.status(200).json({ message: "Database connection is working!" });
+  } catch (error) {
+    res.status(500).json({ message: "Database connection failed!" });
+  }
+});
+
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
-);
+app.use(cors());
 
 app.use("/api/auth", authRoute);
 app.use("/api/doctors", doctorsRoute);

@@ -11,7 +11,7 @@ RUN npm install
 
 # คัดลอก source code ทั้งหมด
 COPY . .
-  
+
 # ✅ generate Prisma Client ที่ถูกต้องสำหรับ Alpine
 RUN npx prisma generate
 
